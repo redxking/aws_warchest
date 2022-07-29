@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: > 
+  Cloudformation Template for Provisioning S3 Bucket and DynamoDB Table to 
+  hold Terraform State and Locks - v0.0.1
+
+Parameters:
+  pTerraformStateBucketPrefix:
+    Description: Prefix of the S3 Bucket Name
+    Type: String   
+  pTerraformStateLockTableName:
+    Description: Name of the DynamoDB Table
+    Type: String
+
+Resources:
+  rTerraformStateS3Bucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub "${pTerraformStateBucketPrefix}-${AWS::AccountId}-${AWS::Region}"
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled 
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  rTerraformStateS3BucketBucketPolicy:
+    DependsOn:
+      - rTerraformStateS3Bucket
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref rTerraformStateS3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: DenyDeletingTerraformStateFiles
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:DeleteObject"
+            Resource: !Sub "arn:aws:s3:::${rTerraformStateS3Bucket}/*"
+
+  rTerraformStateLockDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref pTerraformStateLockTableName
+      AttributeDefinitions:
+        - AttributeName: LockID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: LockID
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      SSESpecification:
+        SSEEnabled: true
+      Tags:
+        # Add custom tags as CloudFormation is not able to add these unlike S3
+        - Key: aws-cloudformation-stack-id
+          Value: !Ref "AWS::StackId"
+        - Key: aws-cloudformation-stack-name
+          Value: !Ref "AWS::StackName"
+        - Key: aws-cloudformation-logical-id
+          Value: rTerraformStateLockDynamoDBTable
+
+Outputs:
+  oTerraformStateS3Bucket:
+    Description: Name of the Terraform State S3 Bucket
+    Value: !Ref rTerraformStateS3Bucket
+    Export:
+      Name: !Sub ${AWS::StackName}-oBucketName
+
+  oTerraformStateLockDynamoDBTable:
+    Description: Name of the Terraform State Lock DynamoDB Table
+    Value: !Ref rTerraformStateLockDynamoDBTable
+    Export:
+      Name: !Sub ${AWS::StackName}-oTerraformStateLockDynamoDBTable

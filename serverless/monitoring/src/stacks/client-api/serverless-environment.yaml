@@ -1,0 +1,19 @@
+---
+
+develop:
+  timeout: 10
+  memorySize: 128
+
+  DUMMY_MSG: "Hello World: Develop"
+
+staging:
+  timeout: 10
+  memorySize: 128
+
+  DUMMY_MSG: "Hello World: Staging"
+
+product:
+  timeout: 10
+  memorySize: 128
+
+  DUMMY_MSG: "Hello World: Product"

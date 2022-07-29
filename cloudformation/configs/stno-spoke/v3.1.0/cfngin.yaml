@@ -1,0 +1,9 @@
+namespace: ${namespace}
+cfngin_bucket: ${cfngin_bucket}
+
+stacks:
+  stno-spoke:
+    template_path: templates/aws-transit-network-orchestrator-spoke.yaml
+    termination_protection: true
+    variables:
+      HubAccount: ${HubAccount}

@@ -1,0 +1,24 @@
+---
+
+custom:
+  # Static Custom Variables
+  sls_environment_path: ${self:provider.environment.sls_stack_path}/serverless-environment.yaml
+  sls_functions_path: ${self:provider.environment.sls_stack_path}/serverless-functions.yaml
+  sls_resources_path: ${self:provider.environment.sls_stack_path}/serverless-resources.yaml
+  sls_permissions_path: ${self:provider.environment.sls_stack_path}/serverless-permissions.yaml
+  sls_services_path: ${self:provider.environment.sls_stack_path}/services
+
+  sls_settings_obj: ${file(${self:custom.sls_environment_path}):${opt:stage}}
+  
+  EmptyArray: []
+  EmptyObject: {}
+
+  # Service Custom Variables
+  #   -- add here.
+
+
+plugins: ${self:custom.EmptyArray}
+
+functions: ${file(${self:custom.sls_functions_path}):functions}
+resources: ${file(${self:custom.sls_resources_path}):resources}
+permissions: ${file(${self:custom.sls_permissions_path}):permissions}

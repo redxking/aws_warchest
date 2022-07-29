@@ -1,0 +1,27 @@
+---
+service: "${env:APP}-${env:STACK}"
+variablesResolutionMode: 20210326
+unresolvedVariablesNotificationMode: error
+
+
+provider:
+  name: aws
+  region: ${opt:region, 'us-west-2'}
+  stage: ${opt:stage, 'develop'}
+  log_level:  DEBUG
+  logRetentionInDays: 30
+  deploymentBucket:
+    name: ${ssm:/cfn/stacks/cw-voter-develop-prerequisites-sls-deployment-bucket/oBucketName}
+    serverSideEncryption: AES256
+  iamRoleStatements: ${file(${self:provider.environment.sls_stack_path}/stack-${env:STACK}.yaml):permissions}
+  environment:
+    sls_stack_path: ${env:APP}/src/stacks/${env:STACK}
+
+
+custom: ${file(${self:provider.environment.sls_stack_path}/stack-${env:STACK}.yaml):custom}
+
+plugins: ${file(${self:provider.environment.sls_stack_path}/stack-${env:STACK}.yaml):plugins}
+
+functions: ${file(${self:provider.environment.sls_stack_path}/stack-${env:STACK}.yaml):functions}
+
+resources: ${file(${self:provider.environment.sls_stack_path}/stack-${env:STACK}.yaml):resources}

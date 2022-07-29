@@ -1,0 +1,10 @@
+namespace: ${namespace}
+cfngin_bucket: ${cfngin_bucket}
+
+stacks:
+  terraform-state:
+    template_path: templates/terraform_backend.yaml
+    termination_protection: true
+    variables:
+      pTerraformStateBucketPrefix: ${namespace}-terraform-state
+      pTerraformStateLockTableName: ${namespace}-terraform-state-lock

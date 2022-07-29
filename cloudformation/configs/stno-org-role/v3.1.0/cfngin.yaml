@@ -1,0 +1,9 @@
+namespace: ${namespace}
+cfngin_bucket: ${cfngin_bucket}
+
+stacks:
+  stno-organization-role:
+    template_path: templates/aws-transit-network-orchestrator-organization-role.yaml
+    termination_protection: true
+    variables:
+      HubAccount: ''

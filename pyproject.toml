@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "poetry-runway"
+version = "0.1.0"
+description = ""
+authors = ["Zach Dobrenen"]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4"
+runway = ">=2.6.2"

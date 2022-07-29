@@ -1,0 +1,11 @@
+namespace: ${namespace}
+cfngin_bucket: ${cfngin_bucket}
+
+stacks:
+  stno-hub:
+    template_path: templates/aws-transit-network-orchestrator-hub.yaml
+    termination_protection: true
+    variables:
+      Principals: ''
+      PrincipalType: ''
+      
