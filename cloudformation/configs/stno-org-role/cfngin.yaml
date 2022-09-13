@@ -6,4 +6,4 @@ stacks:
     template_path: templates/aws-transit-network-orchestrator-organization-role.yaml
     termination_protection: true
     variables:
-      HubAccount: ''
+      HubAccount: ${HubAccount}
