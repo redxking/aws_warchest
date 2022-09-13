@@ -1,0 +1,140 @@
+# Blocks of type "required_providers" are not expected here
+# https://github.com/thazelart/terraform-validator/issues/50
+
+layers:
+  default:
+    files:
+      # Recommended, but not strictly required.
+      main.tf:
+        mandatory: false
+        authorized_blocks:
+          - data
+          - locals
+          - module
+          - output
+          - provider
+          - required_providers
+          - resource
+          - terraform
+          - variable
+
+      # Recommended, but not strictly required.
+      data.tf:
+        mandatory: false
+        authorized_blocks:
+          - data
+          # - locals
+          # - module
+          # - output
+          # - provider
+          # - required_providers
+          # - resource
+          # - terraform
+          # - variable
+
+      # Mandatory, for consistency
+      variables.tf:
+        mandatory: true
+        authorized_blocks:
+          # - data
+          - locals
+          # - module
+          # - output
+          # - provider
+          # - required_providers
+          # - resource
+          # - terraform
+          - variable
+
+      # Mandatory, for consistency
+      versions.tf:
+        mandatory: true
+        authorized_blocks:
+          # - data
+          # - locals
+          # - module
+          # - output
+          # - provider
+          - required_providers
+          # - resource
+          - terraform
+          # - variable
+
+      # Can be optionally broken out from variables.tf
+      locals.tf:
+        mandatory: false
+        authorized_blocks:
+          # - data
+          - locals
+          # - module
+          # - output
+          # - provider
+          # - required_providers
+          # - resource
+          # - terraform
+          # - variable
+
+      # Mandatory, for consistency
+      output.tf:
+        mandatory: true
+        authorized_blocks:
+          # - data
+          # - locals
+          # - module
+          - output
+          # - provider
+          # - required_providers
+          # - resource
+          # - terraform
+          # - variable
+
+      # All other files
+      default:
+        mandatory: false
+        authorized_blocks:
+          - data
+          - locals
+          - module
+          # - output
+          # - provider
+          # - required_providers
+          - resource
+          # - terraform
+          # - variable
+
+    # Yes; should define minimum Terraform version
+    ensure_terraform_version: true
+
+    # Provider versions should be set in the modules as required_providers
+    ensure_providers_version: true
+
+    # Variables should have descriptions
+    ensure_variables_description: true
+
+    # Outputs should have descriptions
+    ensure_outputs_description: true
+
+    # Blocks should be alphanumeric + underscores
+    # Aligns with tflint rules
+    block_pattern_name: "^[a-z0-9_]*$"
+
+  # Use `current_layer: skip_this_folder` in `.terraform-validator.yaml` in any subfolder to skip it
+  skip_this_folder:
+    files:
+      default:
+        mandatory: false
+        authorized_blocks:
+          - data
+          - locals
+          - module
+          - output
+          - provider
+          - resource
+          - terraform
+          - variable
+
+    ensure_terraform_version: false
+    ensure_providers_version: false
+    ensure_variables_description: false
+    ensure_outputs_description: false
+    # block_pattern_name: "*"
