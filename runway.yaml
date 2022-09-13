@@ -172,6 +172,9 @@ deployments:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
       post_deploy_env_revert: True
 
+  ###############################################################################
+  # Serverless Framework to automate the deployment of Lambda Functions and their
+  # resources in the AWS Cloud.
   - name: monitoring
     modules:
       - path: serverless
