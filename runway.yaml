@@ -1,0 +1,198 @@
+---
+ignore_git_branch: true
+
+variables:
+  customer: the-dev-team
+  account_id:
+    master:  922481319116 
+    network: 485355486848 
+    commons: 187739744457 
+    develop: 648027066783
+    staging: 875358465253
+    product: 727515289814
+  assume_role:
+    master:  arn:aws:iam::922481319116:role/AWSAdministratorAccess 
+    network: arn:aws:iam::485355486848:role/AWSControlTowerExecution
+    commons: arn:aws:iam::187739744457:role/AWSControlTowerExecution
+    develop: arn:aws:iam::112564668346:role/AWSControlTowerExecution
+    staging: arn:aws:iam::112564668346:role/AWSControlTowerExecution
+    product: arn:aws:iam::112564668346:role/AWSControlTowerExecution
+
+
+deployments:
+  ##############################################################################
+  # AWS Cloudformation to automate the deployment of Terraform Backend State
+  # Management in the AWS Cloud.
+  - name: terraform-backend
+    modules:
+      - path: cloudformation/configs/terraform_backend
+        type: cloudformation
+    environments:
+      master:  true
+      network: true
+      commons: true
+      develop: true
+      staging: true
+      product: true
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+  ##############################################################################
+  # AWS CloudFormation to automate the deployment of Serverless Transit Network
+  # Orchestrator in the AWS Cloud.
+  - name: transit-network-orchestrator-organization-role
+    modules:
+      - path: cloudformation/configs/stno-org-role
+        type: cloudformation
+    environments:
+      master:  true
+      network: false
+      commons: false
+      develop: false
+      staging: false
+      product: false
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+  - name: transit-network-orchestrator-hub
+    modules:
+      - path: cloudformation/configs/stno-hub
+        type: cloudformation
+    environments:
+      master:  false
+      network: true
+      commons: false
+      develop: false
+      staging: false
+      product: false
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+  - name: transit-network-orchestrator-spoke
+    modules:
+      - path: cloudformation/configs/stno-spoke
+        type: cloudformation
+    environments:
+      master:  false
+      network: false
+      commons: true
+      develop: true
+      staging: true
+      product: true
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+ ###############################################################################
+ # Terraform to automate the deployment of Transite Gateways and their Peering
+ # Connections in the AWS Cloud. 
+  - name: transit-network-gateways
+    modules:
+      - path: terraform/configs/networking/01-transit-gateways
+        type: terraform
+    module_options:
+      terraform_version: "1.2.5"
+      terraform_backend_config:
+        bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-terraform-state.oTerraformStateS3Bucket}
+        dynamodb_table: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-terraform-state.oTerraformStateLockDynamoDBTable}
+        region: ${env AWS_REGION}
+    environments:
+      master:  false
+      network: true
+      commons: false
+      develop: false
+      staging: false
+      product: false
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      environment: ${env DEPLOY_ENVIRONMENT}
+      region: ${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+ ###############################################################################
+ # Terraform to automate the deployment of Vpcs and their supporting resources
+ # in the AWS Cloud.
+  - name: transit-network-vpcs
+    modules:
+      - path: terraform/configs/networking/vpcs
+        type: terraform
+    module_options:
+      terraform_version: "1.2.5"
+      terraform_backend_config:
+        bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-terraform-state.oTerraformStateS3Bucket}
+        dynamodb_table: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-terraform-state.oTerraformStateLockDynamoDBTable}
+        region: ${env AWS_REGION}
+    environments:
+      master:  false
+      network: false
+      commons: true
+      develop: true
+      staging: false
+      product: false
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      environment: ${env DEPLOY_ENVIRONMENT}
+      region: ${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+  ###############################################################################
+  # Serverless Framework to automate the deployment of Lambda Functions and their
+  # supporting resources in the AWS Cloud.
+  - name: monitoring
+    modules:
+      - path: serverless
+        type: serverless
+        parameters:
+          dummy: true
+        env_vars:
+          APP: monitoring
+          STACK: client-api
+        options:
+          skip_npm_ci: false
+    environments:
+      develop: true
+      staging: false
+      product: false
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
