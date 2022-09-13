@@ -2,7 +2,7 @@
 name = "poetry-runway"
 version = "0.1.0"
 description = ""
-authors = ["Zach Dobrenen"]
+authors = ["The Dev Team"]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4"
