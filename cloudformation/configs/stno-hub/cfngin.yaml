@@ -6,6 +6,5 @@ stacks:
     template_path: templates/aws-transit-network-orchestrator-hub.yaml
     termination_protection: true
     variables:
-      Principals: ''
-      PrincipalType: ''
-      
+      Principals: ${Principals} 
+      PrincipalType: ${PrincipalType}
