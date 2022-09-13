@@ -4,10 +4,16 @@ ignore_git_branch: true
 variables:
   customer: the-dev-team
   account_id:
+    master:  922481319116 
+    network: 112564668346 
+    commons: 112564668346 
     develop: 112564668346
     staging: 112564668346
     product: 112564668346
   assume_role:
+    master:  arn:aws:iam::112564668346:role/AWSControlTowerExecution
+    network: arn:aws:iam::112564668346:role/AWSControlTowerExecution
+    commons: arn:aws:iam::112564668346:role/AWSControlTowerExecution
     develop: arn:aws:iam::112564668346:role/AWSControlTowerExecution
     staging: arn:aws:iam::112564668346:role/AWSControlTowerExecution
     product: arn:aws:iam::112564668346:role/AWSControlTowerExecution
@@ -19,6 +25,9 @@ deployments:
       - path: cloudformation/configs/terraform_backend/v0.0.1
         type: cloudformation
     environments:
+      master:  true
+      network: true
+      commons: true
       develop: true
       staging: false
       product: false
@@ -31,6 +40,70 @@ deployments:
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
       post_deploy_env_revert: True
+  
+  - name: transit-network-orchestrator-organization-role
+    modules:
+      - path: cloudformation/configs/stno-org-role
+        type: cloudformation
+    environments:
+      master:  true
+      network: false
+      commons: false
+      develop: false
+      staging: false
+      product: false
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+  - name: transit-network-orchestrator-hub
+    modules:
+      - path: cloudformation/configs/stno-hub
+        type: cloudformation
+    environments:
+      master:  false
+      network: true
+      commons: false
+      develop: false
+      staging: false
+      product: false
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
+  - name: transit-network-orchestrator-spoke
+    modules:
+      - path: cloudformation/configs/stno-spoke
+        type: cloudformation
+    environments:
+      master:  false
+      network: false
+      commons: true
+      develop: true
+      staging: true
+      product: true
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: True
+
 
   - name: networking
     modules:
