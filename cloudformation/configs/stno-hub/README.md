@@ -16,5 +16,5 @@
 - [AWS Documentation](https://docs.aws.amazon.com/solutions/latest/serverless-transit-network-orchestrator/templates.html)
 
 
-> NOTE: Must Enable Sharing with AWS Organizations setting in the Organization
-> Management (master) account.
+> NOTE: In AWS RAM console, must Enable Sharing with AWS Organizations setting
+> on the Organization Management (master) account.
