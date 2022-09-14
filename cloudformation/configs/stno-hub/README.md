@@ -14,3 +14,7 @@
 > the template based on your specific needs.
 
 - [AWS Documentation](https://docs.aws.amazon.com/solutions/latest/serverless-transit-network-orchestrator/templates.html)
+
+
+> NOTE: Must Enable Sharing with AWS Organizations setting in the Organization
+> Management (master) account.

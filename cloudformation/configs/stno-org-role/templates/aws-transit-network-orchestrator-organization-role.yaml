@@ -20,6 +20,9 @@ Parameters:
     Description: Account Id for the STNO hub account, eg. 123456789012
     Type: String
     AllowedPattern: ^\d{12}$
+  RoleName:
+    Description: Name for the IAM Role
+    Type: String
 
 Resources:
   OrganizationInformationRole:
@@ -30,6 +33,7 @@ Resources:
           - id: W11
             reason: "Using * for the Resources as we cannot predict the account IDs or Organization Units that needs to be queried"
     Properties:
+      RoleName: !Ref RoleName
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:

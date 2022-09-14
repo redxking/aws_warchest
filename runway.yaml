@@ -62,6 +62,7 @@ deployments:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
       HubAccount: ${var account_id.network}
+      RoleName: ${var customer}-master-stno-OrganizationInformationRole 
     regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
@@ -83,7 +84,7 @@ deployments:
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
-      OrganizationManagementAccountRoleArn: 'arn:aws:iam::${var account_id.master}:role/${var customer}-master-stno-OrganizationInformation*'
+      OrganizationManagementAccountRoleArn: 'arn:aws:iam::${var account_id.master}:role/${var customer}-master-stno-OrganizationInformationRole'
     regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
