@@ -5,6 +5,26 @@ stacks:
   stno-hub:
     template_path: templates/aws-transit-network-orchestrator-hub.yaml
     termination_protection: true
-    variables:
+    variables: 
       Principals: ${Principals} 
       PrincipalType: ${PrincipalType}
+      ApprovalNotification: ${ApprovalNotification}
+      ApprovalNotificationEmail: ${ApprovalNotificationEmail}
+      UserPoolUsernameForAdminUser: ${UserPoolUsernameForAdminUser}
+      UserPoolUsernameForReadOnlyUser: ${UserPoolUsernameForReadOnlyUser}
+      ConsoleLoginInformationEmail: ${ConsoleLoginInformationEmail}
+      AttachmentTag: ${AttachmentTag}
+      AssociationTag: ${AssociationTag}
+      PropagationTag: ${PropagationTag}
+      TgwPeeringTag: ${TgwPeeringTag}
+      DefaultRoute: ${DefaultRoute}
+      ListOfCustomCidrBlocks: ${ListOfCustomCidrBlocks}
+      CustomerManagedPrefixListIds: ${CustomerManagedPrefixListIds}
+      ExistingTransitGatewayId: ${ExistingTransitGatewayId}
+      ExistingGlobalNetworkId: ${ExistingGlobalNetworkId}
+      ListOfVpcTagsForAttachment: ${ListOfVpcTagsForAttachment}
+      OrganizationManagementAccountRoleArn: ${OrganizationManagementAccountRoleArn}
+      CognitoDomainPrefixParameter: ${CognitoDomainPrefixParameter}
+      CognitoSAMLProviderNameParameter: ${CognitoSAMLProviderNameParameter}
+      CognitoSAMLProviderMetadataUrlParameter: ${CognitoSAMLProviderMetadataUrlParameter}
+      AllowListedRanges: ${AllowListedRanges}

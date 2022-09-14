@@ -7,3 +7,4 @@ stacks:
     termination_protection: true
     variables:
       HubAccount: ${HubAccount}
+      CreateServiceRoleForVPCTransitGateway: ${CreateServiceRoleForVPCTransitGateway}
