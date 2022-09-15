@@ -1,6 +1,11 @@
 namespace: ${namespace}
 cfngin_bucket: ${cfngin_bucket}
 
+common_tags: &common_tags
+  namespace: ${namespace}
+  provisioner: 'cloudformation'
+
+
 stacks:
   stno-organization-role:
     template_path: templates/aws-transit-network-orchestrator-organization-role.yaml
@@ -8,3 +13,5 @@ stacks:
     variables:
       HubAccount: ${HubAccount}
       RoleName: ${RoleName}
+    tags:
+      <<: *common_tags

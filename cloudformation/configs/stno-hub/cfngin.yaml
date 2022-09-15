@@ -1,6 +1,11 @@
 namespace: ${namespace}
 cfngin_bucket: ${cfngin_bucket}
 
+common_tags: &common_tags
+  namespace: ${namespace}
+  provisioner: 'cloudformation'
+
+
 stacks:
   stno-hub:
     template_path: templates/aws-transit-network-orchestrator-hub.yaml
@@ -28,3 +33,5 @@ stacks:
       CognitoSAMLProviderNameParameter: ${CognitoSAMLProviderNameParameter}
       CognitoSAMLProviderMetadataUrlParameter: ${CognitoSAMLProviderMetadataUrlParameter}
       AllowListedRanges: ${AllowListedRanges}
+    tags:
+      <<: *common_tags
