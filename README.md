@@ -7,6 +7,14 @@ Collection of Terraform, Cloudformation and Serverless Framework Resources and M
 
 
 ### Account(s)
+| Account Name | Account Id   | Description                              |
+| :----------- | :----------- | :--------------------------------------- |
+| master       | 922481319116 | Root and Organization Management Account | 
+| develop      | 648027066783 | Develop Environmnet Account              |
+| staging      | 875358465253 | Staging Environment Account              |
+| product      | 727515289814 | Product Environment Account              |
+| network      | 485355486848 | Network Environment Account              |
+| commons      | 187739744457 | Commons Environment Account              |
 
 ### Account(s) / Region(s) - IP Addressing
 | Account Id   | Account Name | Region         | CIDR            | Net Mask      | Range                         | Usable                        | Hosts |
