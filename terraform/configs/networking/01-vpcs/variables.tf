@@ -195,6 +195,11 @@ variable "vpc_create_redshift_subnet_group" {
     default     = true
 } 
 
+variable "vpc_flow_log_cloudwatch_log_group_retention" {
+    description = "Cloudwatch Log Group Retention in Days: VPC Flow"
+    type        = number
+}
+
 #
 # Tag Variables
 #

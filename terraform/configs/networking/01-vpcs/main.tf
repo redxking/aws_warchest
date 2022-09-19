@@ -15,13 +15,18 @@ module "vpc" {
   cidr = lookup(var.vpc_cidr, var.region)
   azs  = lookup(var.vpc_availability_zones, var.region, null)
   
+  # DNS
   enable_dns_hostnames   = var.vpc_enable_dns_hostnames 
-  enable_vpn_gateway     = var.vpc_enable_vpn_gateway
   
+  # VPC Gateway
+  enable_vpn_gateway     = var.vpc_enable_vpn_gateway
+
+  # NAT Gateway
   enable_nat_gateway     = var.vpc_enable_nat_gateway
   single_nat_gateway     = var.vpc_single_nat_gateway
   one_nat_gateway_per_az = var.vpc_one_nat_gateway_per_az
 
+  # Subnet(s)
   database_subnets                = lookup(var.vpc_database_subnet_cidr, var.region, [])
   database_subnet_suffix          = var.vpc_database_subnet_suffix
   database_subnet_tags            = var.vpc_database_subnet_tags
@@ -49,5 +54,15 @@ module "vpc" {
   redshift_subnet_tags            = var.vpc_redshift_subnet_tags
   create_redshift_subnet_group    = var.vpc_create_redshift_subnet_group 
 
+  # Flow Logs
+  create_flow_log_cloudwatch_iam_role       = true
+  create_flow_log_cloudwatch_log_group      = true
+  enable_flow_log                           = true
+  flow_log_traffic_type                     = "ALL"
+  flow_log_destination_type                 = "cloud-watch-logs"
+  flow_log_cloudwatch_log_group_name_prefix = "/aws/vpc/${var.vpc_name}/flow/"
+  flow_log_cloudwatch_log_group_retention_in_days = var.vpc_flow_log_cloudwatch_log_group_retention
+
+  # Tag(s)
   tags = local.tags 
 }

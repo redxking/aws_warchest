@@ -22,6 +22,7 @@ vpc_one_nat_gateway_per_az = true
 
 vpc_enable_vpn_gateway     = false
 vpc_enable_dns_hostnames   = true
+vpc_flow_log_cloudwatch_log_group_retention = 14
 
 # 
 # Subnet Settings: Transit Gateway
