@@ -4,14 +4,18 @@ ignore_git_branch: true
 variables:
   customer: the-dev-team
   account_id:
-    master:  922481319116 
+    master:  922481319116
+    audit:   260992085298
+    archive: 974093653591 
     network: 485355486848 
     commons: 187739744457 
     develop: 648027066783
     staging: 875358465253
     product: 727515289814
   assume_role:
-    master:  arn:aws:iam::922481319116:role/AWSAdministratorAccess 
+    master:  arn:aws:iam::922481319116:role/AWSAdministratorAccess
+    audit:   arn:aws:iam::260992085298:role/AWSControlTowerExecution
+    archive: arn:aws:iam::974093653591:role/AWSControlTowerExecution
     network: arn:aws:iam::485355486848:role/AWSControlTowerExecution
     commons: arn:aws:iam::187739744457:role/AWSControlTowerExecution
     develop: arn:aws:iam::648027066783:role/AWSControlTowerExecution
@@ -29,6 +33,8 @@ deployments:
         type: cloudformation
     environments:
       master:  true
+      audit:   true
+      archive: true
       network: true
       commons: true
       develop: true
@@ -42,7 +48,7 @@ deployments:
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
-      post_deploy_env_revert: True
+      post_deploy_env_revert: true
 
   ##############################################################################
   # AWS CloudFormation to automate the deployment of Serverless Transit Network
@@ -53,6 +59,8 @@ deployments:
         type: cloudformation
     environments:
       master:  true
+      audit:   false
+      archive: false
       network: false
       commons: false
       develop: false
@@ -68,7 +76,7 @@ deployments:
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
-      post_deploy_env_revert: True
+      post_deploy_env_revert: true
 
   - name: transit-network-orchestrator-hub
     modules:
@@ -76,6 +84,8 @@ deployments:
         type: cloudformation
     environments:
       master:  false
+      audit:   false
+      archive: false
       network: true
       commons: false
       develop: false
@@ -90,7 +100,7 @@ deployments:
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
-      post_deploy_env_revert: True
+      post_deploy_env_revert: true
 
   - name: transit-network-orchestrator-spoke
     modules:
@@ -98,6 +108,8 @@ deployments:
         type: cloudformation
     environments:
       master:  false
+      audit:   false
+      archive: false
       network: false
       commons: true
       develop: true
@@ -112,14 +124,14 @@ deployments:
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
-      post_deploy_env_revert: True
+      post_deploy_env_revert: true
 
  ###############################################################################
  # Terraform to automate the deployment of Vpcs and their supporting resources
  # in the AWS Cloud.
   - name: transit-network-vpcs
     modules:
-      - path: terraform/configs/networking/vpcs
+      - path: terraform/configs/networking/01-vpcs
         type: terraform
     module_options:
       terraform_version: "1.2.5"
@@ -129,9 +141,11 @@ deployments:
         region: ${env AWS_REGION}
     environments:
       master:  false
+      audit:   false
+      archive: false
       network: false
       commons: false
-      develop: false
+      develop: true
       staging: false
       product: false
     parameters:
@@ -143,7 +157,7 @@ deployments:
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
-      post_deploy_env_revert: True
+      post_deploy_env_revert: true
 
   ###############################################################################
   # Serverless Framework to automate the deployment of Lambda Functions and their
@@ -161,6 +175,8 @@ deployments:
           skip_npm_ci: false
     environments:
       master:  false
+      audit:   false
+      archive: false
       network: false
       commons: false
       develop: false
@@ -171,4 +187,4 @@ deployments:
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
-      post_deploy_env_revert: True
+      post_deploy_env_revert: true

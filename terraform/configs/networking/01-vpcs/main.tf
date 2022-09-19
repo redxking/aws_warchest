@@ -1,9 +1,9 @@
 locals {
   tags = merge(
-    { namespace: var.namespace },
-    { environment: var.environment },
-    { region: var.region },
-    { provisioner: var.provisioner }
+    { Namespace: var.namespace },
+    { Environment: var.environment },
+    { Region: var.region },
+    { Provisioner: var.provisioner }
   )
 }
 
@@ -19,27 +19,27 @@ module "vpc" {
   enable_vpn_gateway     = var.vpc_enable_vpn_gateway
   
   enable_nat_gateway     = var.vpc_enable_nat_gateway
-  single_nat_gateway     = var.vpc_sinlge_nat_gateway
+  single_nat_gateway     = var.vpc_single_nat_gateway
   one_nat_gateway_per_az = var.vpc_one_nat_gateway_per_az
 
-  database_subnets                = lookup(var.vpc_database_subnet_cidr, var.region, null)
+  database_subnets                = lookup(var.vpc_database_subnet_cidr, var.region, [])
   database_subnet_suffix          = var.vpc_database_subnet_suffix
   create_database_subnet_group    = var.vpc_create_database_subnet_group
 
-  elasticache_subnets             = lookup(var.vpc_elasticache_subnet_cidr, var.regaion, null)
+  elasticache_subnets             = lookup(var.vpc_elasticache_subnet_cidr, var.region, [])
   elasticache_subnet_suffix       = var.vpc_elasticache_subnet_suffix
   create_elasticache_subnet_group = var.vpc_create_elasticache_subnet_group
 
-  intra_subnets                   = lookup(var.vpc_intra_subnet_cidr, var.region, null)
+  intra_subnets                   = lookup(var.vpc_intra_subnet_cidr, var.region, [])
   intra_subnet_suffix             = var.vpc_intra_subnet_suffix
   
-  private_subnets                 = lookup(var.vpc_private_subnet_cidr, var.region, null)
+  private_subnets                 = lookup(var.vpc_private_subnet_cidr, var.region, [])
   private_subnet_suffix           = var.vpc_private_subnet_suffix
   
-  public_subnets                  = lookup(var.vpc_public_subnet_cidr, var.region, null)
+  public_subnets                  = lookup(var.vpc_public_subnet_cidr, var.region, [])
   public_subnet_suffix            = var.vpc_public_subnet_suffix
 
-  redshift_subnets                = lookup(var.vpc_redshift_subnet_cidr, var.region, null)
+  redshift_subnets                = lookup(var.vpc_redshift_subnet_cidr, var.region, [])
   redshift_subnet_suffix          = var.vpc_redshift_subnet_suffix
   create_redshift_subnet_group    = var.vpc_create_redshift_subnet_group 
 

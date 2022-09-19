@@ -26,17 +26,17 @@ variable "vpc_name" {
 
 variable "vpc_cidr"  {
     description = "Cidr of the VPC to create"
-    type        = string
+    type        = map(string)
 }
 
 variable "vpc_enable_dns_hostnames" {
-    descrpition = "Enable DNS hostnames in the VPC"
+    description = "Enable DNS hostnames in the VPC"
     type        = bool
     default     = true
 }
 
 variable "vpc_enable_vpn_gateway" {
-    descrpition = "Provison a new VPN Gateway resource and attach it to the VPC"
+    description = "Provison a new VPN Gateway resource and attach it to the VPC"
     type        = bool
     default     = false
 }
@@ -67,6 +67,7 @@ variable "vpc_availability_zones" {
 variable "vpc_database_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Database"
     type        = map(list(string))
+    default     = {}
 }
 
 variable "vpc_database_subnet_suffix" {
@@ -84,6 +85,7 @@ variable "vpc_create_database_subnet_group" {
 variable "vpc_elasticache_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Elasticache"
     type        = map(list(string))
+    default     = {}
 }
 
 variable "vpc_elasticache_subnet_suffix" {
@@ -101,6 +103,7 @@ variable "vpc_create_elasticache_subnet_group" {
 variable "vpc_intra_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Intra (Transit Gateway)"
     type        = map(list(string))
+    default     = {}
 }
 
 variable "vpc_intra_subnet_suffix" {
@@ -112,6 +115,7 @@ variable "vpc_intra_subnet_suffix" {
 variable "vpc_private_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Private"
     type        = map(list(string))
+    default     = {}
 }
 
 variable "vpc_private_subnet_suffix" {
@@ -123,6 +127,7 @@ variable "vpc_private_subnet_suffix" {
 variable "vpc_public_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Public"
     type        = map(list(string))
+    default     = {}
 }
 
 variable "vpc_public_subnet_suffix" {
@@ -134,6 +139,7 @@ variable "vpc_public_subnet_suffix" {
 variable "vpc_redshift_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Redshift"
     type        = map(list(string))
+    default     = {}
 }
 
 variable "vpc_redshift_subnet_suffix" {
