@@ -19,6 +19,11 @@ variable "region" {
 #
 # Resource Variables
 #
+variable "transit_gateway_id" {
+    description = "Transit Gateway Id (STNO)"
+    type        = map(string)
+}
+
 variable "vpc_name" {
     description = "Name of the VPC to create - used for 'Name' tag on all resources (default: <company>-<environment>)"
     type        = string
@@ -76,6 +81,12 @@ variable "vpc_database_subnet_suffix" {
     default     = null
 }
 
+variable "vpc_database_subnet_tags" {
+    description = "Subnet Tag(s) of the VPC to create: Database"
+    type        = map(string)
+    default     = {}
+}
+
 variable "vpc_create_database_subnet_group" {
     description = "Subnet Group of the VPC to create: Database"
     type        = string
@@ -92,6 +103,12 @@ variable "vpc_elasticache_subnet_suffix" {
     description = "Subnet Suffix of the VPC to create: Elasticache"
     type        = string
     default     = null
+}
+
+variable "vpc_elasticache_subnet_tags" {
+    description = "Subnet Tag(s) of the VPC to create: Elasticache"
+    type        = map(string)
+    default     = {}
 }
 
 variable "vpc_create_elasticache_subnet_group" {
@@ -112,6 +129,12 @@ variable "vpc_intra_subnet_suffix" {
     default     = null
 }
 
+variable "vpc_intra_subnet_tags" {
+    description = "Subnet Tag(s) of the VPC to create: Intra (Transit Gateway)"
+    type        = map(string)
+    default     = {}
+}
+
 variable "vpc_private_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Private"
     type        = map(list(string))
@@ -122,6 +145,12 @@ variable "vpc_private_subnet_suffix" {
     description = "Subnet Suffix of the VPC to create: Private"
     type        = string
     default     = null
+}
+
+variable "vpc_private_subnet_tags" {
+    description = "Subnet Tag(s) of the VPC to create: Private"
+    type        = map(string)
+    default     = {}
 }
 
 variable "vpc_public_subnet_cidr" {
@@ -135,6 +164,12 @@ variable "vpc_public_subnet_suffix" {
     type        = string
     default     = null
 }
+
+variable "vpc_public_subnet_tags" {
+    description = "Subnet Tag(s) of the VPC to create: Public"
+    type        = map(string)
+    default     = {}
+}
   
 variable "vpc_redshift_subnet_cidr" {
     description = "Subnet CIDR(s) of the VPC to create: Redshift"
@@ -146,6 +181,12 @@ variable "vpc_redshift_subnet_suffix" {
     description = "Subnet Suffix of the VPC to create: Redshift"
     type        = string
     default     = null
+}
+
+variable "vpc_redshift_subnet_tags" {
+    description = "Subnet Tag(s) of the VPC to create: Redshift"
+    type        = map(string)
+    default     = {}
 }
 
 variable "vpc_create_redshift_subnet_group" {
