@@ -5,6 +5,8 @@ transit_gateway_id = {
     us-east-1 = "tgw-0f9674be8fe9858a3"
 }
 
+transit_gateway_rfc1918_cidr = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+
 #
 # VPC Settngs
 #

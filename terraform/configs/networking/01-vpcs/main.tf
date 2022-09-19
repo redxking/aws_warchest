@@ -1,4 +1,12 @@
 locals {
+  jumpbox_amis = {
+    us-east-1      = "ami-02538f8925e3aa27a",
+    us-west-2      = "ami-07d59d159373b8030",
+    eu-central-1   = "ami-041e64b0129bffca9",
+    eu-west-1      = "ami-038e9cdc714b15936",
+    ap-northeast-1 = "ami-0b069de314c9ab4c4",
+    ap-southeast-1 = "ami-013586750d303f89d"
+  }
   tags = merge(
     { Namespace: var.namespace },
     { Environment: var.environment },
@@ -118,7 +126,7 @@ module "systems_manager_sg" {
   
   ingress_with_cidr_blocks = [
     {
-      description = "Allow SSL Traffic - VPC Local"
+      description = "Allow TLS Inbound Traffic - VPC Local"
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
@@ -159,12 +167,169 @@ module "route53_resolver_sg" {
   tags = local.tags 
 }
 
-
 ################################################################################
 # VPC Routes Module
 ################################################################################
+resource "aws_route" "transit_gateway_route" {
+  for_each = toset(var.transit_gateway_rfc1918_cidr)
 
+  route_table_id            = module.vpc.intra_route_table_ids[0]
+  destination_cidr_block    = each.value
+  transit_gateway_id        = var.transit_gateway_id[var.region]
+  depends_on                = [module.vpc]
+}
 
 ################################################################################
 # VPC Endpoints Module
 ################################################################################
+module "vpc_endpoints" {
+  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+
+  vpc_id             = module.vpc.vpc_id
+  security_group_ids = [data.aws_security_group.default.id]
+
+  endpoints = {
+    s3 = {
+      service = "s3"
+      tags    = { Name = "s3-vpc-endpoint" }
+    },
+    dynamodb = {
+      service         = "dynamodb"
+      service_type    = "Gateway"
+      route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
+      policy          = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
+      tags            = { Name = "dynamodb-vpc-endpoint" }
+    },
+    ssm = {
+      service             = "ssm"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [module.systems_manager_sg.security_group_id]
+    },
+    ssmmessages = {
+      service             = "ssmmessages"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [module.systems_manager_sg.security_group_id]
+    },
+    lambda = {
+      service             = "lambda"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+    },
+    ecs = {
+      service             = "ecs"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+    },
+    ecs_telemetry = {
+      create              = false
+      service             = "ecs-telemetry"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+    },
+    ec2 = {
+      service             = "ec2"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [module.systems_manager_sg.security_group_id]
+    },
+    ec2messages = {
+      service             = "ec2messages"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [module.systems_manager_sg.security_group_id]
+    },
+    ecr_api = {
+      service             = "ecr.api"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
+    },
+    ecr_dkr = {
+      service             = "ecr.dkr"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
+    },
+    kms = {
+      service             = "kms"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [module.systems_manager_sg.security_group_id]
+    },
+    codedeploy = {
+      service             = "codedeploy"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+    },
+    codedeploy_commands_secure = {
+      service             = "codedeploy-commands-secure"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+    },
+  }
+
+  tags = merge(local.tags, {
+    Endpoint = "true"
+  })
+}
+
+
+################################################################################
+# VPC Jumpbox Module
+################################################################################
+resource "aws_iam_instance_profile" "jumpbox_profile" {
+  name = "jumpbox_profile"
+  role = aws_iam_role.jumpbox_role.name
+}
+
+resource "aws_iam_role" "jumpbox_role" {
+  name = "jumpbox_role"
+  path = "/"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow"
+        }
+    ]
+}
+EOF
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  ]
+}
+
+module "ec2_instance" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 3.0"
+
+  for_each = toset(module.vpc.private_subnets)
+
+  name = "jumpbox-${index(module.vpc.private_subnets, each.value) + 1}"
+
+  ami                    = local.jumpbox_amis[var.region]
+  instance_type          = "t2.micro"
+  key_name               = "jumpbox"
+  monitoring             = true
+  vpc_security_group_ids = [
+    module.transit_gateway_sg.security_group_id,
+    module.systems_manager_sg.security_group_id
+  ]
+  subnet_id              = each.value
+  iam_instance_profile   = aws_iam_instance_profile.jumpbox_profile.id
+
+  # Tag(s)
+  tags = merge(
+    local.tags,
+    { "Type": "jumpbox" }
+  )
+}
