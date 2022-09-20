@@ -12,6 +12,9 @@ runway-deploy-commons:
 runway-deploy-develop:
 	@CI=1 DEPLOY_ENVIRONMENT=develop runway deploy
 
+runway-destroy-develop:
+	@CI=0 DEPLOY_ENVIRONMENT=develop runway destroy
+
 runway-deploy-staging:
 	@CI=1 DEPLOY_ENVIRONMENT=staging runway deploy
 
