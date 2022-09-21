@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
     encrypt = true
-    key     = "networking/terraform.tfstate"
+    key     = "networking/01-vpc/terraform.tfstate"
   }
 }

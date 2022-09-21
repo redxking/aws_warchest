@@ -19,16 +19,6 @@ variable "region" {
 #
 # Resource Variables
 #
-variable "transit_gateway_id" {
-    description = "Transit Gateway Id (STNO)"
-    type        = map(string)
-}
-
-variable "transit_gateway_rfc1918_cidr" {
-    description = "Transit Gateway Private Address Space - RFC1918 (STNO)"
-    type        = list(string)
-}
-
 variable "vpc_name" {
     description = "Name of the VPC to create - used for 'Name' tag on all resources (default: <company>-<environment>)"
     type        = string
