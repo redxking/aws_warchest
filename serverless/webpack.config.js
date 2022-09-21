@@ -10,12 +10,12 @@ module.exports = {
   output: {
     // options related to how webpack emits results
     path:path.resolve(__dirname, "dist"), // string (default)
-    // the target directory for all output files
+    // the target directory for all resource "aws_ssm_parameter" files
     // must be an absolute path (use the Node.js path module)
     filename: "[name].js", // string (default)
     // the filename template for entry chunks
     publicPath: "/assets/", // string
-    // the url to the output directory resolved relative to the HTML page
+    // the url to the resource "aws_ssm_parameter" directory resolved relative to the HTML page
     library: { // There is also an old syntax for this available (click to show)
       type: "umd", // universal module definition
       // the type of the exported library
@@ -28,9 +28,9 @@ module.exports = {
     // unique name for this build to avoid conflicts with other builds in the same HTML
     name: "my-config",
     // name of the configuration, shown in output
-    /* Advanced output configuration (click to show) */
-    /* Expert output configuration 1 (on own risk) */
-    /* Expert output configuration 2 (on own risk) */
+    /* Advanced resource "aws_ssm_parameter" configuration (click to show) */
+    /* Expert resource "aws_ssm_parameter" configuration 1 (on own risk) */
+    /* Expert resource "aws_ssm_parameter" configuration 2 (on own risk) */
   },
   module: {
     // configuration regarding modules
@@ -163,7 +163,7 @@ module.exports = {
     env: true,
     // include value of --env in the output
     outputPath: true,
-    // include absolute output path in the output
+    // include absolute resource "aws_ssm_parameter" path in the output
     publicPath: true,
     // include public path in the output
 
@@ -241,7 +241,7 @@ module.exports = {
     syncWebAssembly: true,
     // WebAssembly as sync module (deprecated)
     outputModule: true,
-    // Allow to output ESM
+    // Allow to resource "aws_ssm_parameter" ESM
     topLevelAwait: true,
     // Allow to use await on module evaluation (Proposal)
   },
@@ -257,9 +257,9 @@ module.exports = {
     mangleExports: "size",
     // rename export names to shorter names
     minimize: true,
-    // minimize the output files
+    // minimize the resource "aws_ssm_parameter" files
     minimizer: [new CssMinimizer(), "..."],
-    // minimizers to use for the output files
+    // minimizers to use for the resource "aws_ssm_parameter" files
 
     /* Advanced optimizations (click to show) */
 

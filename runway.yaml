@@ -133,14 +133,14 @@ deployments:
     modules:
       - path: terraform/configs/networking/01-vpc
         type: terraform
-      - path: terraform/configs/networking/02-security-groups
-        type: terraform
-      - path: terraform/configs/networking/03-routes
-        type: terraform
-      - path: terraform/configs/networking/04-endpoints
-        type: terraform
-      - path: terraform/configs/networking/05-ec2-instances
-        type: terraform
+#      - path: terraform/configs/networking/02-security-groups
+#        type: terraform
+#      - path: terraform/configs/networking/03-routes
+#        type: terraform
+#      - path: terraform/configs/networking/04-endpoints
+#        type: terraform
+#      - path: terraform/configs/networking/05-ec2-instances
+#        type: terraform
     module_options:
       terraform_version: "1.2.5"
       terraform_backend_config:
