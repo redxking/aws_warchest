@@ -1,109 +1,161 @@
 resource "aws_ssm_parameter" "vpc_id" {
-  count       = length(module.vpc.vpc_id) > 0 ? 1 : 0
-
   description = "The ID of the VPC"
   name        = "/infra/${var.environment}/networking/vpc_id"
   type        = "String"
   value       = module.vpc.vpc_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_arn" {
-  count       = length(module.vpc.vpc_arn) > 0 ? 1 : 0
-
   description = "The ARN of the VPC"
   name        = "/infra/${var.environment}/networking/vpc_arn"
   type        = "String"
   value       = module.vpc.vpc_arn
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_cidr_block" {
-  count       = length(module.vpc.vpc_cidr_block) > 0 ? 1 : 0
-
   description = "The CIDR block of the VPC"
   name        = "/infra/${var.environment}/networking/vpc_cidr_block"
   type        = "String"
   value       = module.vpc.vpc_cidr_block
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_security_group_id" {
-  count       = length(module.vpc.default_security_group_id) > 0 ? 1 : 0
-
   description = "The ID of the security group created by default on VPC creation"
   name        = "/infra/${var.environment}/networking/default_security_group_id"
   type        = "String"
-  value       = module.vpc.default_security_group_id
+  count       = module.vpc.default_security_group_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_network_acl_id" {
-  count       = length(module.vpc.default_network_acl_id) > 0 ? 1 : 0
-
   description = "The ID of the default network ACL"
   name        = "/infra/${var.environment}/networking/default_network_acl_id"
   type        = "String"
   value       = module.vpc.default_network_acl_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_route_table_id" {
-  count       = length(module.vpc.default_route_table_id) > 0 ? 1 : 0
-
   description = "The ID of the default route table"
   name        = "/infra/${var.environment}/networking/default_route_table_id"
   type        = "String"
   value       = module.vpc.default_route_table_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_instance_tenancy" {
-  count       = length(module.vpc.vpc_instance_tenancy) > 0 ? 1 : 0
-
   description = "Tenancy of instances spin up within VPC"
   name        = "/infra/${var.environment}/networking/vpc_instance_tenancy"
   type        = "String"
   value       = module.vpc.vpc_instance_tenancy
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_enable_dns_support" {
-  count       = length(tostring(module.vpc.vpc_enable_dns_support)) > 0 ? 1 : 0
-
   description = "Whether or not the VPC has DNS support"
   name        = "/infra/${var.environment}/networking/vpc_enable_dns_support"
   type        = "String"
   value       = module.vpc.vpc_enable_dns_support
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_enable_dns_hostnames" {
-  count       = length(tostring(module.vpc.vpc_enable_dns_hostnames)) > 0 ? 1 : 0
-
   description = "Whether or not the VPC has DNS hostname support"
   name        = "/infra/${var.environment}/networking/vpc_enable_dns_hostnames"
   type        = "String"
   value       = module.vpc.vpc_enable_dns_hostnames
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_main_route_table_id" {
-  count       = length(module.vpc.vpc_main_route_table_id) > 0 ? 1 : 0
-
   description = "The ID of the main route table associated with this VPC"
   name        = "/infra/${var.environment}/networking/vpc_main_route_table_id"
   type        = "String"
   value       = module.vpc.vpc_main_route_table_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_ipv6_association_id" {
-  count       = length(module.vpc.vpc_ipv6_association_id) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "The association ID for the IPv6 CIDR block"
   name        = "/infra/${var.environment}/networking/vpc_ipv6_association_id"
   type        = "String"
   value       = module.vpc.vpc_ipv6_association_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_ipv6_cidr_block" {
-  count       = length(module.vpc.vpc_ipv6_cidr_block) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "The IPv6 CIDR block"
   name        = "/infra/${var.environment}/networking/vpc_ipv6_cidr_block"
   type        = "String"
   value       = module.vpc.vpc_ipv6_cidr_block
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_secondary_cidr_blocks" {
@@ -113,6 +165,12 @@ resource "aws_ssm_parameter" "vpc_secondary_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/vpc_secondary_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.vpc_secondary_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_owner_id" {
@@ -122,6 +180,12 @@ resource "aws_ssm_parameter" "vpc_owner_id" {
   name        = "/infra/${var.environment}/networking/vpc_owner_id"
   type        = "String"
   value       = module.vpc.vpc_owner_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_subnets" {
@@ -131,6 +195,12 @@ resource "aws_ssm_parameter" "private_subnets" {
   name        = "/infra/${var.environment}/networking/private_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_subnets)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_subnet_arns" {
@@ -140,6 +210,12 @@ resource "aws_ssm_parameter" "private_subnet_arns" {
   name        = "/infra/${var.environment}/networking/private_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_subnets_cidr_blocks" {
@@ -149,15 +225,27 @@ resource "aws_ssm_parameter" "private_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/private_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_subnets_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.private_subnets_ipv6_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/private_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_subnets_ipv6_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_subnets" {
@@ -167,6 +255,12 @@ resource "aws_ssm_parameter" "public_subnets" {
   name        = "/infra/${var.environment}/networking/public_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_subnets))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_subnet_arns" {
@@ -176,6 +270,12 @@ resource "aws_ssm_parameter" "public_subnet_arns" {
   name        = "/infra/${var.environment}/networking/public_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_subnets_cidr_blocks" {
@@ -185,15 +285,27 @@ resource "aws_ssm_parameter" "public_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/public_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_subnets_cidr_blocks)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.public_subnets_ipv6_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/public_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_subnets_ipv6_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "outpost_subnets" {
@@ -203,6 +315,12 @@ resource "aws_ssm_parameter" "outpost_subnets" {
   name        = "/infra/${var.environment}/networking/outpost_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.outpost_subnets))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "outpost_subnet_arns" {
@@ -212,6 +330,12 @@ resource "aws_ssm_parameter" "outpost_subnet_arns" {
   name        = "/infra/${var.environment}/networking/outpost_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.outpost_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "outpost_subnets_cidr_blocks" {
@@ -221,15 +345,27 @@ resource "aws_ssm_parameter" "outpost_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/outpost_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.outpost_subnets_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "outpost_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.outpost_subnets_ipv6_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of outpost subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/outpost_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.outpost_subnets_ipv6_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_subnets" {
@@ -239,6 +375,12 @@ resource "aws_ssm_parameter" "database_subnets" {
   name        = "/infra/${var.environment}/networking/database_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_subnets))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_subnet_arns" {
@@ -248,6 +390,12 @@ resource "aws_ssm_parameter" "database_subnet_arns" {
   name        = "/infra/${var.environment}/networking/database_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_subnets_cidr_blocks" {
@@ -257,15 +405,27 @@ resource "aws_ssm_parameter" "database_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/database_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_subnets_cidr_blocks)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.database_subnets_ipv6_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/database_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_subnets_ipv6_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_subnet_group" {
@@ -275,6 +435,12 @@ resource "aws_ssm_parameter" "database_subnet_group" {
   name        = "/infra/${var.environment}/networking/database_subnet_group"
   type        = "String"
   value       = module.vpc.database_subnet_group
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_subnet_group_name" {
@@ -284,6 +450,12 @@ resource "aws_ssm_parameter" "database_subnet_group_name" {
   name        = "/infra/${var.environment}/networking/database_subnet_group_name"
   type        = "String"
   value       = module.vpc.database_subnet_group_name
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_subnets" {
@@ -293,6 +465,12 @@ resource "aws_ssm_parameter" "redshift_subnets" {
   name        = "/infra/${var.environment}/networking/redshift_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnets))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_subnet_arns" {
@@ -302,6 +480,12 @@ resource "aws_ssm_parameter" "redshift_subnet_arns" {
   name        = "/infra/${var.environment}/networking/redshift_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_subnets_cidr_blocks" {
@@ -311,15 +495,27 @@ resource "aws_ssm_parameter" "redshift_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/redshift_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnets_cidr_blocks)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.redshift_subnets_ipv6_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/redshift_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnets_ipv6_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_subnet_group" {
@@ -329,6 +525,12 @@ resource "aws_ssm_parameter" "redshift_subnet_group" {
   name        = "/infra/${var.environment}/networking/redshift_subnet_group"
   type        = "String"
   value       = module.vpc.redshift_subnet_group
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_subnets" {
@@ -338,6 +540,12 @@ resource "aws_ssm_parameter" "elasticache_subnets" {
   name        = "/infra/${var.environment}/networking/elasticache_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnets))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_subnet_arns" {
@@ -347,6 +555,12 @@ resource "aws_ssm_parameter" "elasticache_subnet_arns" {
   name        = "/infra/${var.environment}/networking/elasticache_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_subnets_cidr_blocks" {
@@ -356,15 +570,27 @@ resource "aws_ssm_parameter" "elasticache_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/elasticache_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnets_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.elasticache_subnets_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/elasticache_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnets_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_subnets" {
@@ -374,6 +600,12 @@ resource "aws_ssm_parameter" "intra_subnets" {
   name        = "/infra/${var.environment}/networking/intra_subnets"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_subnets))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_subnet_arns" {
@@ -383,6 +615,12 @@ resource "aws_ssm_parameter" "intra_subnet_arns" {
   name        = "/infra/${var.environment}/networking/intra_subnet_arns"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_subnet_arns))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_subnets_cidr_blocks" {
@@ -392,15 +630,27 @@ resource "aws_ssm_parameter" "intra_subnets_cidr_blocks" {
   name        = "/infra/${var.environment}/networking/intra_subnets_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_subnets_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_subnets_ipv6_cidr_blocks" {
-  count       = length(module.vpc.intra_subnets_ipv6_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC"
   name        = "/infra/${var.environment}/networking/intra_subnets_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_subnets_ipv6_cidr_blocks))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_subnet_group" {
@@ -410,6 +660,12 @@ resource "aws_ssm_parameter" "elasticache_subnet_group" {
   name        = "/infra/${var.environment}/networking/elasticache_subnet_group"
   type        = "String"
   value       = module.vpc.elasticache_subnet_group
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_subnet_group_name" {
@@ -419,6 +675,12 @@ resource "aws_ssm_parameter" "elasticache_subnet_group_name" {
   name        = "/infra/${var.environment}/networking/elasticache_subnet_group_name"
   type        = "String"
   value       = module.vpc.elasticache_subnet_group_name
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_route_table_ids" {
@@ -428,6 +690,12 @@ resource "aws_ssm_parameter" "public_route_table_ids" {
   name        = "/infra/${var.environment}/networking/public_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_route_table_ids" {
@@ -437,6 +705,12 @@ resource "aws_ssm_parameter" "private_route_table_ids" {
   name        = "/infra/${var.environment}/networking/private_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_route_table_ids" {
@@ -446,6 +720,12 @@ resource "aws_ssm_parameter" "database_route_table_ids" {
   name        = "/infra/${var.environment}/networking/database_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_route_table_ids" {
@@ -455,6 +735,12 @@ resource "aws_ssm_parameter" "redshift_route_table_ids" {
   name        = "/infra/${var.environment}/networking/redshift_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_route_table_ids" {
@@ -464,6 +750,12 @@ resource "aws_ssm_parameter" "elasticache_route_table_ids" {
   name        = "/infra/${var.environment}/networking/elasticache_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_route_table_ids" {
@@ -473,6 +765,12 @@ resource "aws_ssm_parameter" "intra_route_table_ids" {
   name        = "/infra/${var.environment}/networking/intra_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_internet_gateway_route_id" {
@@ -482,15 +780,27 @@ resource "aws_ssm_parameter" "public_internet_gateway_route_id" {
   name        = "/infra/${var.environment}/networking/public_internet_gateway_route_id"
   type        = "String"
   value       = module.vpc.public_internet_gateway_route_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_internet_gateway_ipv6_route_id" {
-  count       = length(module.vpc.public_internet_gateway_ipv6_route_id) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "ID of the IPv6 internet gateway route"
   name        = "/infra/${var.environment}/networking/public_internet_gateway_ipv6_route_id"
   type        = "String"
   value       = module.vpc.public_internet_gateway_ipv6_route_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_internet_gateway_route_id" {
@@ -500,6 +810,12 @@ resource "aws_ssm_parameter" "database_internet_gateway_route_id" {
   name        = "/infra/${var.environment}/networking/database_internet_gateway_route_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.database_internet_gateway_route_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_nat_gateway_route_ids" {
@@ -509,15 +825,27 @@ resource "aws_ssm_parameter" "database_nat_gateway_route_ids" {
   name        = "/infra/${var.environment}/networking/database_nat_gateway_route_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_nat_gateway_route_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_ipv6_egress_route_id" {
-  count       = length(module.vpc.database_ipv6_egress_route_id) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "ID of the database IPv6 egress route"
   name        = "/infra/${var.environment}/networking/database_ipv6_egress_route_id"
   type        = "String"
   value       = module.vpc.database_ipv6_egress_route_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
@@ -527,15 +855,27 @@ resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
   name        = "/infra/${var.environment}/networking/private_nat_gateway_route_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_nat_gateway_route_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_ipv6_egress_route_ids" {
-  count       = length(module.vpc.private_ipv6_egress_route_ids) > 0 ? 1 : 0
+  count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IDs of the ipv6 egress route"
   name        = "/infra/${var.environment}/networking/private_ipv6_egress_route_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_ipv6_egress_route_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_route_table_association_ids" {
@@ -545,6 +885,12 @@ resource "aws_ssm_parameter" "private_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/private_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_route_table_association_ids" {
@@ -554,6 +900,12 @@ resource "aws_ssm_parameter" "database_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/database_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_route_table_association_ids))
+  
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_route_table_association_ids" {
@@ -563,6 +915,12 @@ resource "aws_ssm_parameter" "redshift_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/redshift_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_public_route_table_association_ids" {
@@ -572,6 +930,12 @@ resource "aws_ssm_parameter" "redshift_public_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/redshift_public_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_public_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_route_table_association_ids" {
@@ -581,6 +945,12 @@ resource "aws_ssm_parameter" "elasticache_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/elasticache_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_route_table_association_ids" {
@@ -590,6 +960,12 @@ resource "aws_ssm_parameter" "intra_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/intra_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_route_table_association_ids" {
@@ -599,6 +975,12 @@ resource "aws_ssm_parameter" "public_route_table_association_ids" {
   name        = "/infra/${var.environment}/networking/public_route_table_association_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "dhcp_options_id" {
@@ -608,6 +990,12 @@ resource "aws_ssm_parameter" "dhcp_options_id" {
   name        = "/infra/${var.environment}/networking/dhcp_options_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.dhcp_options_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "nat_ids" {
@@ -617,6 +1005,12 @@ resource "aws_ssm_parameter" "nat_ids" {
   name        = "/infra/${var.environment}/networking/nat_ids"
   type        = "String"
   value       = join(",", tolist(module.vpc.public_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "nat_public_ips" {
@@ -626,6 +1020,12 @@ resource "aws_ssm_parameter" "nat_public_ips" {
   name        = "/infra/${var.environment}/networking/nat_public_ips"
   type        = "String"
   value       = join(",", tolist(module.vpc.nat_public_ips))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "natgw_ids" {
@@ -635,6 +1035,12 @@ resource "aws_ssm_parameter" "natgw_ids" {
   name        = "/infra/${var.environment}/networking/natgw_ids"
   type        = "String"
   value       = join(",", tolist(module.vpc.natgw_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "igw_id" {
@@ -644,6 +1050,12 @@ resource "aws_ssm_parameter" "igw_id" {
   name        = "/infra/${var.environment}/networking/igw_id"
   type        = "String"
   value       = module.vpc.igw_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "igw_arn" {
@@ -653,6 +1065,12 @@ resource "aws_ssm_parameter" "igw_arn" {
   name        = "/infra/${var.environment}/networking/igw_arn"
   type        = "String"
   value       = module.vpc.igw_arn
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "egress_only_internet_gateway_id" {
@@ -662,6 +1080,12 @@ resource "aws_ssm_parameter" "egress_only_internet_gateway_id" {
   name        = "/infra/${var.environment}/networking/egress_only_internet_gateway_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.egress_only_internet_gateway_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "cgw_ids" {
@@ -671,6 +1095,12 @@ resource "aws_ssm_parameter" "cgw_ids" {
   name        = "/infra/${var.environment}/networking/cgw_ids"
   type        = "String"
   value       = join(",", tolist(module.vpc.cgw_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "cgw_arns" {
@@ -680,6 +1110,12 @@ resource "aws_ssm_parameter" "cgw_arns" {
   name        = "/infra/${var.environment}/networking/cgw_arns"
   type        = "String"
   value       = join(",", tolist(module.vpc.cgw_arns)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vgw_id" {
@@ -689,6 +1125,12 @@ resource "aws_ssm_parameter" "vgw_id" {
   name        = "/infra/${var.environment}/networking/vgw_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.vgw_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vgw_arn" {
@@ -698,6 +1140,12 @@ resource "aws_ssm_parameter" "vgw_arn" {
   name        = "/infra/${var.environment}/networking/vgw_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.vgw_arn))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_id" {
@@ -707,6 +1155,12 @@ resource "aws_ssm_parameter" "default_vpc_id" {
   name        = "/infra/${var.environment}/networking/default_vpc_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_arn" {
@@ -716,6 +1170,12 @@ resource "aws_ssm_parameter" "default_vpc_arn" {
   name        = "/infra/${var.environment}/networking/default_vpc_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_arn))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_cidr_block" {
@@ -725,6 +1185,12 @@ resource "aws_ssm_parameter" "default_vpc_cidr_block" {
   name        = "/infra/${var.environment}/networking/default_vpc_cidr_block"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_cidr_block)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_default_security_group_id" {
@@ -734,6 +1200,12 @@ resource "aws_ssm_parameter" "default_vpc_default_security_group_id" {
   name        = "/infra/${var.environment}/networking/default_vpc_default_security_group_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_default_security_group_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_default_network_acl_id" {
@@ -743,6 +1215,12 @@ resource "aws_ssm_parameter" "default_vpc_default_network_acl_id" {
   name        = "/infra/${var.environment}/networking/default_vpc_default_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_default_network_acl_id)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_default_route_table_id" {
@@ -752,6 +1230,12 @@ resource "aws_ssm_parameter" "default_vpc_default_route_table_id" {
   name        = "/infra/${var.environment}/networking/default_vpc_default_route_table_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_default_route_table_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_instance_tenancy" {
@@ -761,6 +1245,12 @@ resource "aws_ssm_parameter" "default_vpc_instance_tenancy" {
   name        = "/infra/${var.environment}/networking/default_vpc_instance_tenancy"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_instance_tenancy))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_enable_dns_support" {
@@ -770,6 +1260,12 @@ resource "aws_ssm_parameter" "default_vpc_enable_dns_support" {
   name        = "/infra/${var.environment}/networking/default_vpc_enable_dns_support"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_enable_dns_support))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_enable_dns_hostnames" {
@@ -779,6 +1275,12 @@ resource "aws_ssm_parameter" "default_vpc_enable_dns_hostnames" {
   name        = "/infra/${var.environment}/networking/default_vpc_enable_dns_hostnames"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_enable_dns_hostnames))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "default_vpc_main_route_table_id" {
@@ -788,6 +1290,12 @@ resource "aws_ssm_parameter" "default_vpc_main_route_table_id" {
   name        = "/infra/${var.environment}/networking/default_vpc_main_route_table_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.default_vpc_main_route_table_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_network_acl_id" {
@@ -797,6 +1305,12 @@ resource "aws_ssm_parameter" "public_network_acl_id" {
   name        = "/infra/${var.environment}/networking/public_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.public_network_acl_id)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "public_network_acl_arn" {
@@ -806,6 +1320,12 @@ resource "aws_ssm_parameter" "public_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/public_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.public_network_acl_arn)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_network_acl_id" {
@@ -815,6 +1335,12 @@ resource "aws_ssm_parameter" "private_network_acl_id" {
   name        = "/infra/${var.environment}/networking/private_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.private_network_acl_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "private_network_acl_arn" {
@@ -824,6 +1350,12 @@ resource "aws_ssm_parameter" "private_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/private_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.private_network_acl_arn))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "outpost_network_acl_id" {
@@ -833,6 +1365,12 @@ resource "aws_ssm_parameter" "outpost_network_acl_id" {
   name        = "/infra/${var.environment}/networking/outpost_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.outpost_network_acl_id)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "outpost_network_acl_arn" {
@@ -842,6 +1380,12 @@ resource "aws_ssm_parameter" "outpost_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/outpost_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.outpost_network_acl_arn)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_network_acl_id" {
@@ -851,6 +1395,12 @@ resource "aws_ssm_parameter" "intra_network_acl_id" {
   name        = "/infra/${var.environment}/networking/intra_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.intra_network_acl_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "intra_network_acl_arn" {
@@ -860,6 +1410,12 @@ resource "aws_ssm_parameter" "intra_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/intra_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.intra_network_acl_arn))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_network_acl_id" {
@@ -869,6 +1425,12 @@ resource "aws_ssm_parameter" "database_network_acl_id" {
   name        = "/infra/${var.environment}/networking/database_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.database_network_acl_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "database_network_acl_arn" {
@@ -878,6 +1440,12 @@ resource "aws_ssm_parameter" "database_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/database_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.database_network_acl_arn)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_network_acl_id" {
@@ -887,6 +1455,12 @@ resource "aws_ssm_parameter" "redshift_network_acl_id" {
   name        = "/infra/${var.environment}/networking/redshift_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.redshift_network_acl_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "redshift_network_acl_arn" {
@@ -896,6 +1470,12 @@ resource "aws_ssm_parameter" "redshift_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/redshift_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.redshift_network_acl_arn)) 
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_network_acl_id" {
@@ -905,6 +1485,12 @@ resource "aws_ssm_parameter" "elasticache_network_acl_id" {
   name        = "/infra/${var.environment}/networking/elasticache_network_acl_id"
   type        = "String"
   value       = join(",", tolist(module.vpc.elasticache_network_acl_id))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "elasticache_network_acl_arn" {
@@ -914,6 +1500,12 @@ resource "aws_ssm_parameter" "elasticache_network_acl_arn" {
   name        = "/infra/${var.environment}/networking/elasticache_network_acl_arn"
   type        = "String"
   value       = join(",", tolist(module.vpc.elasticache_network_acl_arn))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 # VPC flow log
@@ -924,6 +1516,12 @@ resource "aws_ssm_parameter" "vpc_flow_log_id" {
   name        = "/infra/${var.environment}/networking/vpc_flow_log_id"
   type        = "String"
   value       = module.vpc.vpc_flow_log_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_flow_log_destination_arn" {
@@ -933,6 +1531,12 @@ resource "aws_ssm_parameter" "vpc_flow_log_destination_arn" {
   name        = "/infra/${var.environment}/networking/vpc_flow_log_destination_arn"
   type        = "String"
   value       = module.vpc.vpc_flow_log_destination_arn
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_flow_log_destination_type" {
@@ -942,6 +1546,12 @@ resource "aws_ssm_parameter" "vpc_flow_log_destination_type" {
   name        = "/infra/${var.environment}/networking/vpc_flow_log_destination_type"
   type        = "String"
   value       = module.vpc.vpc_flow_log_destination_type
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "vpc_flow_log_cloudwatch_iam_role_arn" {
@@ -951,6 +1561,12 @@ resource "aws_ssm_parameter" "vpc_flow_log_cloudwatch_iam_role_arn" {
   name        = "/infra/${var.environment}/networking/vpc_flow_log_cloudwatch_iam_role_arn"
   type        = "String"
   value       = module.vpc.vpc_flow_log_cloudwatch_iam_role_arn
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 # Static values (arguments)
@@ -961,6 +1577,12 @@ resource "aws_ssm_parameter" "azs" {
   name        = "/infra/${var.environment}/networking/vpc_availability_zones"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.azs))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }
 
 resource "aws_ssm_parameter" "name" {
@@ -970,4 +1592,10 @@ resource "aws_ssm_parameter" "name" {
   name        = "/infra/${var.environment}/networking/vpc_name"
   type        = "String"
   value       = module.vpc.name
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
 }

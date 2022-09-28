@@ -1,4 +1,5 @@
 locals {
+  create_related_ipv6_resources = var.vpc_enable_ipv6 ? true : false
   tags = merge(
     { Namespace: var.namespace },
     { Environment: var.environment },
@@ -16,6 +17,9 @@ module "vpc" {
   name = var.vpc_name
   cidr = lookup(var.vpc_cidr, var.region)
   azs  = lookup(var.vpc_availability_zones, var.region, null)
+
+  # IPv6
+  enable_ipv6            = var.vpc_enable_ipv6
   
   # DNS
   enable_dns_hostnames   = var.vpc_enable_dns_hostnames 
@@ -57,9 +61,9 @@ module "vpc" {
   create_redshift_subnet_group    = var.vpc_create_redshift_subnet_group 
 
   # Flow Logs
-  create_flow_log_cloudwatch_iam_role       = true
-  create_flow_log_cloudwatch_log_group      = true
-  enable_flow_log                           = true
+  enable_flow_log                           = var.vpc_enable_flow_log
+  create_flow_log_cloudwatch_iam_role       = var.vpc_create_flow_log_cloudwatch_iam_role
+  create_flow_log_cloudwatch_log_group      = var.vpc_create_flow_log_cloudwatch_log_group
   flow_log_traffic_type                     = "ALL"
   flow_log_destination_type                 = "cloud-watch-logs"
   flow_log_cloudwatch_log_group_name_prefix = "/aws/vpc/${var.vpc_name}/flow/"

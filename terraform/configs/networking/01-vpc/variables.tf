@@ -29,6 +29,12 @@ variable "vpc_cidr"  {
     type        = map(string)
 }
 
+variable "vpc_enable_ipv6" {
+    description = ""
+    type        = bool
+    default     = false
+}
+
 variable "vpc_enable_dns_hostnames" {
     description = "Enable DNS hostnames in the VPC"
     type        = bool
@@ -189,6 +195,24 @@ variable "vpc_create_redshift_subnet_group" {
     type        = string
     default     = true
 } 
+
+variable "vpc_enable_flow_log" {
+    description = ""
+    type        = bool
+    default     = true
+}
+
+variable "vpc_create_flow_log_cloudwatch_iam_role" {
+    description = ""
+    type        = bool
+    default     = true
+}
+
+variable "vpc_create_flow_log_cloudwatch_log_group" {
+    description = ""
+    type        = bool
+    default     = true
+}
 
 variable "vpc_flow_log_cloudwatch_log_group_retention" {
     description = "Cloudwatch Log Group Retention in Days: VPC Flow"
