@@ -139,8 +139,8 @@ deployments:
     modules:
       - path: terraform/configs/networking/01-vpc
         type: terraform
-#      - path: terraform/configs/networking/02-security-groups
-#        type: terraform
+      - path: terraform/configs/networking/02-security-groups
+        type: terraform
 #      - path: terraform/configs/networking/03-routes
 #        type: terraform
 #      - path: terraform/configs/networking/04-endpoints

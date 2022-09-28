@@ -7,7 +7,6 @@ locals {
   )
 }
 
-<<<<<<< HEAD
 
 ################################################################################
 # VPC Security Groups Module(s)
@@ -17,7 +16,7 @@ module "transit_gateway_sg" {
 
   name        = "transit-gateway-sg"
   description = "Security group for AWS Transit Gateway" 
-  vpc_id      = module.vpc.vpc_id 
+  vpc_id      = data.aws_ssm_parameter.vpc_id.value 
   
   egress_with_cidr_blocks = [
     {
@@ -54,7 +53,7 @@ module "systems_manager_sg" {
 
   name        = "systems-manager-sg"
   description = "Security group for AWS Systems Manager" 
-  vpc_id      = module.vpc.vpc_id 
+  vpc_id      = data.aws_ssm_parameter.vpc_id.value 
   
   ingress_with_cidr_blocks = [
     {
@@ -62,7 +61,7 @@ module "systems_manager_sg" {
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
-      cidr_blocks = module.vpc.vpc_cidr_block
+      cidr_blocks = data.aws_ssm_parameter.vpc_cidr.value
     }
   ] 
   
@@ -75,7 +74,7 @@ module "route53_resolver_sg" {
 
   name        = "route53-resolver-sg"
   description = "Security group for AWS Route53 Resolver" 
-  vpc_id      = module.vpc.vpc_id 
+  vpc_id      = data.aws_ssm_parameter.vpc_id.value 
   
   egress_with_cidr_blocks = [
     {
@@ -95,66 +94,6 @@ module "route53_resolver_sg" {
     }
   ] 
   
-=======
-################################################################################
-# VPC Module
-################################################################################
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-
-  name = var.vpc_name
-  cidr = lookup(var.vpc_cidr, var.region)
-  azs  = lookup(var.vpc_availability_zones, var.region, null)
-  
-  # DNS
-  enable_dns_hostnames   = var.vpc_enable_dns_hostnames 
-  
-  # VPC Gateway
-  enable_vpn_gateway     = var.vpc_enable_vpn_gateway
-
-  # NAT Gateway
-  enable_nat_gateway     = var.vpc_enable_nat_gateway
-  single_nat_gateway     = var.vpc_single_nat_gateway
-  one_nat_gateway_per_az = var.vpc_one_nat_gateway_per_az
-
-  # Subnet(s)
-  database_subnets                = lookup(var.vpc_database_subnet_cidr, var.region, [])
-  database_subnet_suffix          = var.vpc_database_subnet_suffix
-  database_subnet_tags            = var.vpc_database_subnet_tags
-  create_database_subnet_group    = var.vpc_create_database_subnet_group
-
-  elasticache_subnets             = lookup(var.vpc_elasticache_subnet_cidr, var.region, [])
-  elasticache_subnet_suffix       = var.vpc_elasticache_subnet_suffix
-  elasticache_subnet_tags         = var.vpc_elasticache_subnet_tags
-  create_elasticache_subnet_group = var.vpc_create_elasticache_subnet_group
-
-  intra_subnets                   = lookup(var.vpc_intra_subnet_cidr, var.region, [])
-  intra_subnet_suffix             = var.vpc_intra_subnet_suffix
-  intra_subnet_tags               = var.vpc_intra_subnet_tags
-
-  private_subnets                 = lookup(var.vpc_private_subnet_cidr, var.region, [])
-  private_subnet_suffix           = var.vpc_private_subnet_suffix
-  private_subnet_tags             = var.vpc_private_subnet_tags
-
-  public_subnets                  = lookup(var.vpc_public_subnet_cidr, var.region, [])
-  public_subnet_suffix            = var.vpc_public_subnet_suffix
-  public_subnet_tags              = var.vpc_public_subnet_tags
-
-  redshift_subnets                = lookup(var.vpc_redshift_subnet_cidr, var.region, [])
-  redshift_subnet_suffix          = var.vpc_redshift_subnet_suffix
-  redshift_subnet_tags            = var.vpc_redshift_subnet_tags
-  create_redshift_subnet_group    = var.vpc_create_redshift_subnet_group 
-
-  # Flow Logs
-  create_flow_log_cloudwatch_iam_role       = true
-  create_flow_log_cloudwatch_log_group      = true
-  enable_flow_log                           = true
-  flow_log_traffic_type                     = "ALL"
-  flow_log_destination_type                 = "cloud-watch-logs"
-  flow_log_cloudwatch_log_group_name_prefix = "/aws/vpc/${var.vpc_name}/flow/"
-  flow_log_cloudwatch_log_group_retention_in_days = var.vpc_flow_log_cloudwatch_log_group_retention
-
->>>>>>> 4fc6f5cd8e1b7ddd8fe2c50eba26e57426f6055e
   # Tag(s)
   tags = local.tags 
 }
