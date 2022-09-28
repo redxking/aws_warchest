@@ -9,7 +9,7 @@ locals {
 
 
 ################################################################################
-# VPC Security Groups Module(s)
+# VPC Security Groups Module(s) - Common
 ################################################################################
 module "transit_gateway_sg" {
   source = "terraform-aws-modules/security-group/aws"
@@ -61,7 +61,7 @@ module "systems_manager_sg" {
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
-      cidr_blocks = data.aws_ssm_parameter.vpc_cidr.value
+      cidr_blocks = data.aws_ssm_parameter.vpc_cidr_block.value
     }
   ] 
   
@@ -97,3 +97,8 @@ module "route53_resolver_sg" {
   # Tag(s)
   tags = local.tags 
 }
+
+
+################################################################################
+# VPC Security Groups Module(s) - Custom
+################################################################################
