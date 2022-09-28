@@ -141,8 +141,8 @@ deployments:
         type: terraform
       - path: terraform/configs/networking/02-security-groups
         type: terraform
-#      - path: terraform/configs/networking/03-routes
-#        type: terraform
+      - path: terraform/configs/networking/03-routes
+        type: terraform
 #      - path: terraform/configs/networking/04-endpoints
 #        type: terraform
 #      - path: terraform/configs/networking/05-ec2-instances
