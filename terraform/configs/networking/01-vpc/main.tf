@@ -1,5 +1,18 @@
 locals {
-  create_related_ipv6_resources = var.vpc_enable_ipv6 ? true : false
+  create_related_ipv6_resources                     = var.vpc_enable_ipv6 ? true : false
+  create_related_secondary_cidr_resources           = length(var.vpc_secondary_cidr_blocks) > 0 ? true : false
+  create_related_private_subnet_resources           = length(var.vpc_private_subnet_cidr) > 0 ? true : false
+  create_related_public_subnet_resources            = length(var.vpc_public_subnet_cidr) > 0 ? true : false
+  create_related_outpost_subnet_resources           = length(var.vpc_outpost_subnet_cidr) > 0 ? true : false
+  create_related_database_subnet_resources          = length(var.vpc_database_subnet_cidr) > 0 ? true : false
+  create_related_database_subnet_group_resources    = var.vpc_create_database_subnet_group ? true : false
+  create_related_redshift_subnet_resources          = length(var.vpc_redshift_subnet_cidr) > 0 ? true : false
+  create_related_redshift_subnet_group_resources    = var.vpc_create_redshift_subnet_group ? true : false
+  create_related_elasticache_subnet_resources       = length(var.vpc_elasticache_subnet_cidr) > 0 ? true : false
+  create_related_elasticache_subnet_group_resources = var.vpc_create_elasticache_subnet_group ? true : false
+  create_related_intra_subnet_resources             = length(var.vpc_intra_subnet_cidr) > 0 ? true : false
+  create_related_internet_gateway_resources         = var.vpc_create_internet_gateway ? true : false
+  create_related_nat_gateway_resources              = var.vpc_enable_nat_gateway ? true : false
   tags = merge(
     { Namespace: var.namespace },
     { Environment: var.environment },
@@ -22,9 +35,13 @@ module "vpc" {
   enable_ipv6            = var.vpc_enable_ipv6
   
   # DNS
+  enable_dns_support     = var.vpc_enable_dns_support
   enable_dns_hostnames   = var.vpc_enable_dns_hostnames 
-  
-  # VPC Gateway
+
+  # Internet Gateway
+  create_igw             = var.vpc_enable_internet_gateway
+
+  # VPN Gateway
   enable_vpn_gateway     = var.vpc_enable_vpn_gateway
 
   # NAT Gateway

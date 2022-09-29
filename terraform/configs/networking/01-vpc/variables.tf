@@ -29,10 +29,21 @@ variable "vpc_cidr"  {
     type        = map(string)
 }
 
+variable "vpc_availability_zones" {
+    description = "Availability Zone of the VPC to create"
+    type        = map(list(string))
+}
+
 variable "vpc_enable_ipv6" {
     description = ""
     type        = bool
     default     = false
+}
+
+variable "vpc_enable_dns_support" {
+  description = "Should be true to enable DNS support in the VPC"
+  type        = bool
+  default     = true
 }
 
 variable "vpc_enable_dns_hostnames" {
@@ -65,9 +76,10 @@ variable "vpc_one_nat_gateway_per_az" {
     default     = true
 }
 
-variable "vpc_availability_zones" {
-    description = "Availability Zone of the VPC to create"
-    type        = map(list(string))
+variable "vpc_enable_internet_gateway" {
+  description = "Controls if an Internet Gateway is created for public subnets and the related routes that connect them."
+  type        = bool
+  default     = true
 }
 
 variable "vpc_database_subnet_cidr" {

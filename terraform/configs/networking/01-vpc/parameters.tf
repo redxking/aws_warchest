@@ -93,7 +93,7 @@ resource "aws_ssm_parameter" "vpc_enable_dns_support" {
   description = "Whether or not the VPC has DNS support"
   name        = "/infra/${var.environment}/networking/vpc_enable_dns_support"
   type        = "String"
-  value       = module.vpc.vpc_enable_dns_support
+  value       = var.vpc_enable_dns_support
 
   # Tag(s)
   tags        = local.tags 
@@ -106,7 +106,7 @@ resource "aws_ssm_parameter" "vpc_enable_dns_hostnames" {
   description = "Whether or not the VPC has DNS hostname support"
   name        = "/infra/${var.environment}/networking/vpc_enable_dns_hostnames"
   type        = "String"
-  value       = module.vpc.vpc_enable_dns_hostnames
+  value       = var.vpc_enable_dns_hostnames
 
   # Tag(s)
   tags        = local.tags 
@@ -159,7 +159,7 @@ resource "aws_ssm_parameter" "vpc_ipv6_cidr_block" {
 }
 
 resource "aws_ssm_parameter" "vpc_secondary_cidr_blocks" {
-  count       = length(module.vpc.vpc_secondary_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_secondary_cidr_resources ? 1 : 0
 
   description = "List of secondary CIDR blocks of the VPC"
   name        = "/infra/${var.environment}/networking/vpc_secondary_cidr_blocks"
@@ -174,8 +174,6 @@ resource "aws_ssm_parameter" "vpc_secondary_cidr_blocks" {
 }
 
 resource "aws_ssm_parameter" "vpc_owner_id" {
-  count       = length(module.vpc.vpc_owner_id) > 0 ? 1 : 0
-
   description = "The ID of the AWS account that owns the VPC"
   name        = "/infra/${var.environment}/networking/vpc_owner_id"
   type        = "String"
@@ -189,7 +187,7 @@ resource "aws_ssm_parameter" "vpc_owner_id" {
 }
 
 resource "aws_ssm_parameter" "private_subnets" {
-  count       = length(module.vpc.private_subnets) > 0 ? 1 : 0
+  count       = local.create_related_private_subnet_resources ? 1 : 0
 
   description = "List of IDs of private subnets"
   name        = "/infra/${var.environment}/networking/private_subnets"
@@ -204,7 +202,7 @@ resource "aws_ssm_parameter" "private_subnets" {
 }
 
 resource "aws_ssm_parameter" "private_subnet_arns" {
-  count       = length(module.vpc.private_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_private_subnet_resources ? 1 : 0
 
   description = "List of ARNs of private subnets"
   name        = "/infra/${var.environment}/networking/private_subnet_arns"
@@ -219,7 +217,7 @@ resource "aws_ssm_parameter" "private_subnet_arns" {
 }
 
 resource "aws_ssm_parameter" "private_subnets_cidr_blocks" {
-  count       = length(module.vpc.private_subnets_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_private_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of private subnets"
   name        = "/infra/${var.environment}/networking/private_subnets_cidr_blocks"
@@ -249,7 +247,7 @@ resource "aws_ssm_parameter" "private_subnets_ipv6_cidr_blocks" {
 }
 
 resource "aws_ssm_parameter" "public_subnets" {
-  count       = length(module.vpc.public_subnets) > 0 ? 1 : 0
+  count       = local.create_related_public_subnet_resources ? 1 : 0
 
   description = "List of IDs of public subnets"
   name        = "/infra/${var.environment}/networking/public_subnets"
@@ -264,7 +262,7 @@ resource "aws_ssm_parameter" "public_subnets" {
 }
 
 resource "aws_ssm_parameter" "public_subnet_arns" {
-  count       = length(module.vpc.public_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_public_subnet_resources ? 1 : 0
 
   description = "List of ARNs of public subnets"
   name        = "/infra/${var.environment}/networking/public_subnet_arns"
@@ -279,7 +277,7 @@ resource "aws_ssm_parameter" "public_subnet_arns" {
 }
 
 resource "aws_ssm_parameter" "public_subnets_cidr_blocks" {
-  count       = length(module.vpc.public_subnets_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_public_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of public subnets"
   name        = "/infra/${var.environment}/networking/public_subnets_cidr_blocks"
@@ -309,7 +307,7 @@ resource "aws_ssm_parameter" "public_subnets_ipv6_cidr_blocks" {
 }
 
 resource "aws_ssm_parameter" "outpost_subnets" {
-  count       = length(module.vpc.outpost_subnets) > 0 ? 1 : 0
+  count       = local.create_related_outpost_subnet_resources ? 1 : 0
 
   description = "List of IDs of outpost subnets"
   name        = "/infra/${var.environment}/networking/outpost_subnets"
@@ -324,7 +322,7 @@ resource "aws_ssm_parameter" "outpost_subnets" {
 }
 
 resource "aws_ssm_parameter" "outpost_subnet_arns" {
-  count       = length(module.vpc.outpost_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_outpost_subnet_resources ? 1 : 0
 
   description = "List of ARNs of outpost subnets"
   name        = "/infra/${var.environment}/networking/outpost_subnet_arns"
@@ -339,7 +337,7 @@ resource "aws_ssm_parameter" "outpost_subnet_arns" {
 }
 
 resource "aws_ssm_parameter" "outpost_subnets_cidr_blocks" {
-  count       = length(module.vpc.outpost_subnets_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_outpost_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of outpost subnets"
   name        = "/infra/${var.environment}/networking/outpost_subnets_cidr_blocks"
@@ -369,7 +367,7 @@ resource "aws_ssm_parameter" "outpost_subnets_ipv6_cidr_blocks" {
 }
 
 resource "aws_ssm_parameter" "database_subnets" {
-  count       = length(module.vpc.database_subnets) > 0 ? 1 : 0
+  count       = local.create_related_database_subnet_resources ? 1 : 0
 
   description = "List of IDs of database subnets"
   name        = "/infra/${var.environment}/networking/database_subnets"
@@ -384,7 +382,7 @@ resource "aws_ssm_parameter" "database_subnets" {
 }
 
 resource "aws_ssm_parameter" "database_subnet_arns" {
-  count       = length(module.vpc.database_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_database_subnet_resources ? 1 : 0
 
   description = "List of ARNs of database subnets"
   name        = "/infra/${var.environment}/networking/database_subnet_arns"
@@ -399,7 +397,7 @@ resource "aws_ssm_parameter" "database_subnet_arns" {
 }
 
 resource "aws_ssm_parameter" "database_subnets_cidr_blocks" {
-  count       = length(module.vpc.database_subnets_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_database_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of database subnets"
   name        = "/infra/${var.environment}/networking/database_subnets_cidr_blocks"
@@ -428,11 +426,11 @@ resource "aws_ssm_parameter" "database_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "database_subnet_group" {
-  count       = length(module.vpc.database_subnet_group) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "database_subnet_group_id" {
+  count       = local.create_related_database_subnet_group_resources ? 1 : 0
 
   description = "ID of database subnet group"
-  name        = "/infra/${var.environment}/networking/database_subnet_group"
+  name        = "/infra/${var.environment}/networking/database_subnet_group_id"
   type        = "String"
   value       = module.vpc.database_subnet_group
 
@@ -444,7 +442,7 @@ resource "aws_ssm_parameter" "database_subnet_group" {
 }
 
 resource "aws_ssm_parameter" "database_subnet_group_name" {
-  count       = length(module.vpc.database_subnet_group_name) > 0 ? 1 : 0
+  count       = local.create_related_database_subnet_group_resources ? 1 : 0
 
   description = "Name of database subnet group"
   name        = "/infra/${var.environment}/networking/database_subnet_group_name"
@@ -458,11 +456,11 @@ resource "aws_ssm_parameter" "database_subnet_group_name" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "redshift_subnets" {
-  count       = length(module.vpc.redshift_subnets) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "redshift_subnet_ids" {
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
 
   description = "List of IDs of redshift subnets"
-  name        = "/infra/${var.environment}/networking/redshift_subnets"
+  name        = "/infra/${var.environment}/networking/redshift_subnet_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnets))
 
@@ -474,7 +472,7 @@ resource "aws_ssm_parameter" "redshift_subnets" {
 }
 
 resource "aws_ssm_parameter" "redshift_subnet_arns" {
-  count       = length(module.vpc.redshift_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
 
   description = "List of ARNs of redshift subnets"
   name        = "/infra/${var.environment}/networking/redshift_subnet_arns"
@@ -488,11 +486,11 @@ resource "aws_ssm_parameter" "redshift_subnet_arns" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "redshift_subnets_cidr_blocks" {
-  count       = length(module.vpc.redshift_subnets_cidr_blocks) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "redshift_subnet_cidr_blocks" {
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of redshift subnets"
-  name        = "/infra/${var.environment}/networking/redshift_subnets_cidr_blocks"
+  name        = "/infra/${var.environment}/networking/redshift_subnet_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnets_cidr_blocks)) 
 
@@ -503,11 +501,11 @@ resource "aws_ssm_parameter" "redshift_subnets_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "redshift_subnets_ipv6_cidr_blocks" {
+resource "aws_ssm_parameter" "redshift_subnet_ipv6_cidr_blocks" {
   count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
-  name        = "/infra/${var.environment}/networking/redshift_subnets_ipv6_cidr_blocks"
+  name        = "/infra/${var.environment}/networking/redshift_subnet_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.redshift_subnets_ipv6_cidr_blocks))
 
@@ -518,11 +516,11 @@ resource "aws_ssm_parameter" "redshift_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "redshift_subnet_group" {
-  count       = length(module.vpc.redshift_subnet_group) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "redshift_subnet_group_id" {
+  count       = local.create_related_redshift_subnet_group_resources ? 1 : 0
 
   description = "ID of redshift subnet group"
-  name        = "/infra/${var.environment}/networking/redshift_subnet_group"
+  name        = "/infra/${var.environment}/networking/redshift_subnet_group_id"
   type        = "String"
   value       = module.vpc.redshift_subnet_group
 
@@ -533,11 +531,26 @@ resource "aws_ssm_parameter" "redshift_subnet_group" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "elasticache_subnets" {
-  count       = length(module.vpc.elasticache_subnets) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "redshift_subnet_group_name" {
+  count       = local.create_related_redshift_subnet_group_resources ? 1 : 0
+
+  description = "Name of redshift subnet group"
+  name        = "/infra/${var.environment}/networking/redshift_subnet_group_name"
+  type        = "String"
+  value       = module.vpc.redshift_subnet_group_name
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "elasticache_subnet_ids" {
+  count       = local.create_related_elasticache_subnet_resources ? 1 : 0
 
   description = "List of IDs of elasticache subnets"
-  name        = "/infra/${var.environment}/networking/elasticache_subnets"
+  name        = "/infra/${var.environment}/networking/elasticache_subnet_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnets))
 
@@ -549,7 +562,7 @@ resource "aws_ssm_parameter" "elasticache_subnets" {
 }
 
 resource "aws_ssm_parameter" "elasticache_subnet_arns" {
-  count       = length(module.vpc.elasticache_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_elasticache_subnet_resources ? 1 : 0
 
   description = "List of ARNs of elasticache subnets"
   name        = "/infra/${var.environment}/networking/elasticache_subnet_arns"
@@ -563,11 +576,11 @@ resource "aws_ssm_parameter" "elasticache_subnet_arns" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "elasticache_subnets_cidr_blocks" {
-  count       = length(module.vpc.elasticache_subnets_cidr_blocks) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "elasticache_subnet_cidr_blocks" {
+  count       = local.create_related_elasticache_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of elasticache subnets"
-  name        = "/infra/${var.environment}/networking/elasticache_subnets_cidr_blocks"
+  name        = "/infra/${var.environment}/networking/elasticache_subnet_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnets_cidr_blocks))
 
@@ -578,11 +591,11 @@ resource "aws_ssm_parameter" "elasticache_subnets_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "elasticache_subnets_ipv6_cidr_blocks" {
+resource "aws_ssm_parameter" "elasticache_subnet_ipv6_cidr_blocks" {
   count       = local.create_related_ipv6_resources ? 1 : 0
 
   description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
-  name        = "/infra/${var.environment}/networking/elasticache_subnets_ipv6_cidr_blocks"
+  name        = "/infra/${var.environment}/networking/elasticache_subnet_ipv6_cidr_blocks"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.elasticache_subnets_cidr_blocks))
 
@@ -593,11 +606,41 @@ resource "aws_ssm_parameter" "elasticache_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "intra_subnets" {
-  count       = length(module.vpc.intra_subnets) > 0 ? 1 : 0
+resource "aws_ssm_parameter" "elasticache_subnet_group_id" {
+  count       = local.create_related_elasticache_subnet_group_resources ? 1 : 0
+
+  description = "ID of elasticache subnet group"
+  name        = "/infra/${var.environment}/networking/elasticache_subnet_group_id"
+  type        = "String"
+  value       = module.vpc.elasticache_subnet_group
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "elasticache_subnet_group_name" {
+  count       = local.create_related_elasticache_subnet_group_resources ? 1 : 0
+
+  description = "Name of elasticache subnet group"
+  name        = "/infra/${var.environment}/networking/elasticache_subnet_group_name"
+  type        = "String"
+  value       = module.vpc.elasticache_subnet_group_name
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "intra_subnet_ids" {
+  count       = local.create_related_intra_subnet_resources ? 1 : 0
 
   description = "List of IDs of intra subnets"
-  name        = "/infra/${var.environment}/networking/intra_subnets"
+  name        = "/infra/${var.environment}/networking/intra_subnet_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_subnets))
 
@@ -609,7 +652,7 @@ resource "aws_ssm_parameter" "intra_subnets" {
 }
 
 resource "aws_ssm_parameter" "intra_subnet_arns" {
-  count       = length(module.vpc.intra_subnet_arns) > 0 ? 1 : 0
+  count       = local.create_related_intra_subnet_resources ? 1 : 0
 
   description = "List of ARNs of intra subnets"
   name        = "/infra/${var.environment}/networking/intra_subnet_arns"
@@ -624,7 +667,7 @@ resource "aws_ssm_parameter" "intra_subnet_arns" {
 }
 
 resource "aws_ssm_parameter" "intra_subnets_cidr_blocks" {
-  count       = length(module.vpc.intra_subnets_cidr_blocks) > 0 ? 1 : 0
+  count       = local.create_related_intra_subnet_resources ? 1 : 0
 
   description = "List of cidr_blocks of intra subnets"
   name        = "/infra/${var.environment}/networking/intra_subnets_cidr_blocks"
@@ -653,38 +696,8 @@ resource "aws_ssm_parameter" "intra_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "elasticache_subnet_group" {
-  count       = length(module.vpc.elasticache_subnet_group) > 0 ? 1 : 0
-
-  description = "ID of elasticache subnet group"
-  name        = "/infra/${var.environment}/networking/elasticache_subnet_group"
-  type        = "String"
-  value       = module.vpc.elasticache_subnet_group
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "elasticache_subnet_group_name" {
-  count       = length(module.vpc.elasticache_subnet_group_name) > 0 ? 1 : 0
-
-  description = "Name of elasticache subnet group"
-  name        = "/infra/${var.environment}/networking/elasticache_subnet_group_name"
-  type        = "String"
-  value       = module.vpc.elasticache_subnet_group_name
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
 resource "aws_ssm_parameter" "public_route_table_ids" {
-  count       = length(module.vpc.public_route_table_ids) > 0 ? 1 : 0
+  count       = local.create_related_public_subnet_resources ? 1 : 0
 
   description = "List of IDs of public route tables"
   name        = "/infra/${var.environment}/networking/public_route_table_ids"
@@ -699,7 +712,7 @@ resource "aws_ssm_parameter" "public_route_table_ids" {
 }
 
 resource "aws_ssm_parameter" "private_route_table_ids" {
-  count       = length(module.vpc.private_route_table_ids) > 0 ? 1 : 0
+  count       = local.create_related_private_subnet_resources ? 1 : 0
 
   description = "List of IDs of private route tables"
   name        = "/infra/${var.environment}/networking/private_route_table_ids"
@@ -714,7 +727,7 @@ resource "aws_ssm_parameter" "private_route_table_ids" {
 }
 
 resource "aws_ssm_parameter" "database_route_table_ids" {
-  count       = length(module.vpc.database_route_table_ids) > 0 ? 1 : 0
+  count       = local.create_related_database_subnet_resources ? 1 : 0
 
   description = "List of IDs of database route tables"
   name        = "/infra/${var.environment}/networking/database_route_table_ids"
@@ -729,7 +742,7 @@ resource "aws_ssm_parameter" "database_route_table_ids" {
 }
 
 resource "aws_ssm_parameter" "redshift_route_table_ids" {
-  count       = length(module.vpc.redshift_route_table_ids) > 0 ? 1 : 0
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
 
   description = "List of IDs of redshift route tables"
   name        = "/infra/${var.environment}/networking/redshift_route_table_ids"
@@ -744,7 +757,7 @@ resource "aws_ssm_parameter" "redshift_route_table_ids" {
 }
 
 resource "aws_ssm_parameter" "elasticache_route_table_ids" {
-  count       = length(module.vpc.elasticache_route_table_ids) > 0 ? 1 : 0
+  count       = local.create_related_elasticache_subnet_resources ? 1 : 0
 
   description = "List of IDs of elasticache route tables"
   name        = "/infra/${var.environment}/networking/elasticache_route_table_ids"
@@ -759,7 +772,7 @@ resource "aws_ssm_parameter" "elasticache_route_table_ids" {
 }
 
 resource "aws_ssm_parameter" "intra_route_table_ids" {
-  count       = length(module.vpc.intra_route_table_ids) > 0 ? 1 : 0
+  count       = local.create_related_intra_subnet_resources ? 1 : 0
 
   description = "List of IDs of intra route tables"
   name        = "/infra/${var.environment}/networking/intra_route_table_ids"
@@ -804,12 +817,12 @@ resource "aws_ssm_parameter" "public_internet_gateway_ipv6_route_id" {
 }
 
 resource "aws_ssm_parameter" "database_internet_gateway_route_id" {
-  count       = length(module.vpc.database_internet_gateway_route_id) > 0 ? 1 : 0
+  count       = local.create_related_internet_gateway_resources ? 1 : 0
 
   description = "ID of the database internet gateway route"
   name        = "/infra/${var.environment}/networking/database_internet_gateway_route_id"
   type        = "String"
-  value       = join(",", tolist(module.vpc.database_internet_gateway_route_id))
+  value       = module.vpc.database_internet_gateway_route_id
 
   # Tag(s)
   tags        = local.tags 
@@ -819,7 +832,7 @@ resource "aws_ssm_parameter" "database_internet_gateway_route_id" {
 }
 
 resource "aws_ssm_parameter" "database_nat_gateway_route_ids" {
-  count       = length(module.vpc.database_nat_gateway_route_ids) > 0 ? 1 : 0
+  count       = local.create_related_nat_gateway_resources ? 1 : 0
 
   description = "List of IDs of the database nat gateway route"
   name        = "/infra/${var.environment}/networking/database_nat_gateway_route_ids"
@@ -849,7 +862,7 @@ resource "aws_ssm_parameter" "database_ipv6_egress_route_id" {
 }
 
 resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
-  count       = length(module.vpc.private_nat_gateway_route_ids) > 0 ? 1 : 0
+  count       = local.create_related_private_subnet_resources && local.create_related_nat_gateway_resources ? 1 : 0
 
   description = "List of IDs of the private nat gateway route"
   name        = "/infra/${var.environment}/networking/private_nat_gateway_route_ids"
@@ -879,7 +892,7 @@ resource "aws_ssm_parameter" "private_ipv6_egress_route_ids" {
 }
 
 resource "aws_ssm_parameter" "private_route_table_association_ids" {
-  count       = length(module.vpc.private_route_table_association_ids) > 0 ? 1 : 0
+  count       = local.create_related_private_subnet_resources ? 1 : 0
 
   description = "List of IDs of the private route table association"
   name        = "/infra/${var.environment}/networking/private_route_table_association_ids"
@@ -894,7 +907,7 @@ resource "aws_ssm_parameter" "private_route_table_association_ids" {
 }
 
 resource "aws_ssm_parameter" "database_route_table_association_ids" {
-  count       = length(module.vpc.database_route_table_association_ids) > 0 ? 1 : 0
+  count       = local.create_related_database_subnet_resources ? 1 : 0
 
   description = "List of IDs of the database route table association"
   name        = "/infra/${var.environment}/networking/database_route_table_association_ids"
@@ -909,7 +922,7 @@ resource "aws_ssm_parameter" "database_route_table_association_ids" {
 }
 
 resource "aws_ssm_parameter" "redshift_route_table_association_ids" {
-  count       = length(module.vpc.redshift_route_table_association_ids) > 0 ? 1 : 0
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
 
   description = "List of IDs of the redshift route table association"
   name        = "/infra/${var.environment}/networking/redshift_route_table_association_ids"
