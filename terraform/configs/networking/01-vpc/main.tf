@@ -28,7 +28,8 @@ locals {
 # VPC Module
 ################################################################################
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "3.16.0" 
 
   name = var.vpc_name
   cidr = lookup(var.vpc_cidr_blocks, var.region)

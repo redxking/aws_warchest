@@ -1,4 +1,4 @@
-locals {
+locals {  
   tags = merge(
     { Namespace: var.namespace },
     { Environment: var.environment },
@@ -12,7 +12,8 @@ locals {
 # VPC Security Groups Module(s) - Common
 ################################################################################
 module "transit_gateway_sg" {
-  source = "terraform-aws-modules/security-group/aws"
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "4.13.1"
 
   name        = "transit-gateway-sg"
   description = "Security group for AWS Transit Gateway" 
@@ -50,6 +51,7 @@ module "transit_gateway_sg" {
 
 module "systems_manager_sg" {
   source = "terraform-aws-modules/security-group/aws"
+  version = "4.13.1"
 
   name        = "systems-manager-sg"
   description = "Security group for AWS Systems Manager" 
@@ -71,6 +73,7 @@ module "systems_manager_sg" {
 
 module "route53_resolver_sg" {
   source = "terraform-aws-modules/security-group/aws"
+  version = "4.13.1"
 
   name        = "route53-resolver-sg"
   description = "Security group for AWS Route53 Resolver" 
