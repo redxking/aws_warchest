@@ -24,9 +24,15 @@ variable "vpc_name" {
     type        = string
 }
 
-variable "vpc_cidr"  {
-    description = "Cidr of the VPC to create"
-    type        = map(string)
+variable "vpc_cidr_blocks"  {
+    description = "CIDR(s) of the VPC to create"
+    type        = map(list(string))
+}
+
+variable "vpc_secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
+  type        = map(list(string))
+  default     = {}
 }
 
 variable "vpc_availability_zones" {
@@ -82,7 +88,13 @@ variable "vpc_enable_internet_gateway" {
   default     = true
 }
 
-variable "vpc_database_subnet_cidr" {
+variable "vpc_customer_gateways" {
+  description = "Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address)"
+  type        = map(map(any))
+  default     = {}
+}
+
+variable "vpc_database_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Database"
     type        = map(list(string))
     default     = {}
@@ -106,7 +118,7 @@ variable "vpc_create_database_subnet_group" {
     default     = true
 }
 
-variable "vpc_elasticache_subnet_cidr" {
+variable "vpc_elasticache_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Elasticache"
     type        = map(list(string))
     default     = {}
@@ -130,7 +142,7 @@ variable "vpc_create_elasticache_subnet_group" {
     default     = true
 }
 
-variable "vpc_intra_subnet_cidr" {
+variable "vpc_intra_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Intra (Transit Gateway)"
     type        = map(list(string))
     default     = {}
@@ -148,7 +160,7 @@ variable "vpc_intra_subnet_tags" {
     default     = {}
 }
 
-variable "vpc_private_subnet_cidr" {
+variable "vpc_private_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Private"
     type        = map(list(string))
     default     = {}
@@ -166,7 +178,7 @@ variable "vpc_private_subnet_tags" {
     default     = {}
 }
 
-variable "vpc_public_subnet_cidr" {
+variable "vpc_public_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Public"
     type        = map(list(string))
     default     = {}
@@ -184,7 +196,7 @@ variable "vpc_public_subnet_tags" {
     default     = {}
 }
   
-variable "vpc_redshift_subnet_cidr" {
+variable "vpc_redshift_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Redshift"
     type        = map(list(string))
     default     = {}
