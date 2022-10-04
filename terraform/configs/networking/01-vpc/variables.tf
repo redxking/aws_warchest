@@ -24,8 +24,8 @@ variable "vpc_name" {
     type        = string
 }
 
-variable "vpc_cidr_blocks"  {
-    description = "CIDR(s) of the VPC to create"
+variable "vpc_cidr_block"  {
+    description = "CIDR of the VPC to create"
     type        = map(string)
 }
 

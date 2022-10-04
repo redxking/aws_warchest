@@ -11,31 +11,31 @@ resource "aws_ssm_parameter" "vpc_id" {
   depends_on  = [module.vpc]
 }
 
-# resource "aws_ssm_parameter" "vpc_arn" {
-#   description = "The ARN of the VPC"
-#   name        = "/infra/${var.environment}/networking/vpc_arn"
-#   type        = "String"
-#   value       = module.vpc.vpc_arn
+resource "aws_ssm_parameter" "vpc_arn" {
+  description = "The ARN of the VPC"
+  name        = "/infra/${var.environment}/networking/vpc_arn"
+  type        = "String"
+  value       = module.vpc.vpc_arn
 
-#   # Tag(s)
-#   tags        = local.tags 
+  # Tag(s)
+  tags        = local.tags 
 
-#   # Dependency(s)
-#   depends_on  = [module.vpc]
-# }
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
 
-# resource "aws_ssm_parameter" "vpc_cidr_blocks" {
-#   description = "The CIDR block of the VPC"
-#   name        = "/infra/${var.environment}/networking/vpc_cidr_blocks"
-#   type        = "String"
-#   value       = module.vpc.vpc_cidr_block
+resource "aws_ssm_parameter" "vpc_cidr_block" {
+  description = "The CIDR block of the VPC"
+  name        = "/infra/${var.environment}/networking/vpc_cidr_block"
+  type        = "String"
+  value       = module.vpc.vpc_cidr_block
 
-#   # Tag(s)
-#   tags        = local.tags 
+  # Tag(s)
+  tags        = local.tags 
 
-#   # Dependency(s)
-#   depends_on  = [module.vpc]
-# }
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
 
 # resource "aws_ssm_parameter" "default_security_group_id" {
 #   description = "The ID of the security group created by default on VPC creation"

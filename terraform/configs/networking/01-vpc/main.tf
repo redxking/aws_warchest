@@ -31,7 +31,7 @@ module "vpc" {
   version = "3.16.0" 
 
   name = var.vpc_name
-  cidr = lookup(var.vpc_cidr_blocks, var.region)
+  cidr = lookup(var.vpc_cidr_block, var.region)
   azs  = lookup(var.vpc_availability_zones, var.region)
 
   # IPv6

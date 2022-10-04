@@ -2,7 +2,7 @@
 # VPC Settngs
 #
 vpc_name = "workload"
-vpc_cidr_blocks = {
+vpc_cidr_block = {
    us-east-1 = "172.16.128.0/21"
 }
 vpc_availability_zones = {
