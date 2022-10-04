@@ -26,7 +26,7 @@ variable "vpc_name" {
 
 variable "vpc_cidr_blocks"  {
     description = "CIDR(s) of the VPC to create"
-    type        = map(list(string))
+    type        = map(string)
 }
 
 variable "vpc_secondary_cidr_blocks" {

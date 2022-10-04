@@ -306,66 +306,6 @@ resource "aws_ssm_parameter" "vpc_id" {
 #   depends_on  = [module.vpc]
 # }
 
-# resource "aws_ssm_parameter" "outpost_subnets" {
-#   count       = local.create_related_outpost_subnet_resources ? 1 : 0
-
-#   description = "List of IDs of outpost subnets"
-#   name        = "/infra/${var.environment}/networking/outpost_subnets"
-#   type        = "StringList"
-#   value       = join(",", tolist(module.vpc.outpost_subnets))
-
-#   # Tag(s)
-#   tags        = local.tags 
-
-#   # Dependency(s)
-#   depends_on  = [module.vpc]
-# }
-
-# resource "aws_ssm_parameter" "outpost_subnet_arns" {
-#   count       = local.create_related_outpost_subnet_resources ? 1 : 0
-
-#   description = "List of ARNs of outpost subnets"
-#   name        = "/infra/${var.environment}/networking/outpost_subnet_arns"
-#   type        = "StringList"
-#   value       = join(",", tolist(module.vpc.outpost_subnet_arns))
-
-#   # Tag(s)
-#   tags        = local.tags 
-
-#   # Dependency(s)
-#   depends_on  = [module.vpc]
-# }
-
-# resource "aws_ssm_parameter" "outpost_subnets_cidr_blocks" {
-#   count       = local.create_related_outpost_subnet_resources ? 1 : 0
-
-#   description = "List of cidr_blocks of outpost subnets"
-#   name        = "/infra/${var.environment}/networking/outpost_subnets_cidr_blocks"
-#   type        = "StringList"
-#   value       = join(",", tolist(module.vpc.outpost_subnets_cidr_blocks))
-
-#   # Tag(s)
-#   tags        = local.tags 
-
-#   # Dependency(s)
-#   depends_on  = [module.vpc]
-# }
-
-# resource "aws_ssm_parameter" "outpost_subnets_ipv6_cidr_blocks" {
-#   count       = local.create_related_ipv6_resources ? 1 : 0
-
-#   description = "List of IPv6 cidr_blocks of outpost subnets in an IPv6 enabled VPC"
-#   name        = "/infra/${var.environment}/networking/outpost_subnets_ipv6_cidr_blocks"
-#   type        = "StringList"
-#   value       = join(",", tolist(module.vpc.outpost_subnets_ipv6_cidr_blocks))
-
-#   # Tag(s)
-#   tags        = local.tags 
-
-#   # Dependency(s)
-#   depends_on  = [module.vpc]
-# }
-
 # resource "aws_ssm_parameter" "database_subnets" {
 #   count       = local.create_related_database_subnet_resources ? 1 : 0
 
