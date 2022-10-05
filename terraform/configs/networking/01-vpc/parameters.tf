@@ -186,11 +186,11 @@ resource "aws_ssm_parameter" "vpc_owner_id" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "private_subnets" {
+resource "aws_ssm_parameter" "private_subnet_ids" {
   count       = local.create_related_private_subnet_resources ? 1 : 0
 
   description = "List of IDs of private subnets"
-  name        = "/infra/${var.environment}/networking/private_subnets"
+  name        = "/infra/${var.environment}/networking/private_subnet_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.private_subnets)) 
 
@@ -246,11 +246,11 @@ resource "aws_ssm_parameter" "private_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "public_subnets" {
+resource "aws_ssm_parameter" "public_subnet_ids" {
   count       = local.create_related_public_subnet_resources ? 1 : 0
 
   description = "List of IDs of public subnets"
-  name        = "/infra/${var.environment}/networking/public_subnets"
+  name        = "/infra/${var.environment}/networking/public_subnet_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.public_subnets))
 
@@ -306,11 +306,11 @@ resource "aws_ssm_parameter" "public_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "database_subnets" {
+resource "aws_ssm_parameter" "database_subnet_ids" {
   count       = local.create_related_database_subnet_resources ? 1 : 0
 
   description = "List of IDs of database subnets"
-  name        = "/infra/${var.environment}/networking/database_subnets"
+  name        = "/infra/${var.environment}/networking/database_subnet_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.database_subnets))
 

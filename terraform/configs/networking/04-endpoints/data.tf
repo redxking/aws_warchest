@@ -1,14 +1,40 @@
 # Define any data sources here
 
-data "aws_ec2_transit_gateway" "stno" {
-    id = var.transit_gateway_id[var.region]
+#
+# Data: SSM Parameters - VPC
+#
+data "aws_ssm_parameter" "vpc_id" {
+  name   = "/infra/${var.environment}/networking/vpc_id"
 }
 
-data "aws_security_group" "default" {
-  name   = "default"
-  vpc_id = module.vpc.vpc_id
+data "aws_ssm_parameter" "vpc_private_subnet_ids" {
+  name   = "/infra/${var.environment}/networking/private_subnet_ids"
 }
 
+data "aws_ssm_parameter" "vpc_public_route_table_ids" {
+  name   = "/infra/${var.environment}/networking/public_route_table_ids"
+}
+
+data "aws_ssm_parameter" "vpc_private_route_table_ids" {
+  name   = "/infra/${var.environment}/networking/private_route_table_ids"
+}
+
+data "aws_ssm_parameter" "vpc_intra_route_table_ids" {
+  name   = "/infra/${var.environment}/networking/intra_route_table_ids"
+}
+
+data "aws_ssm_parameter" "default_security_group_id" {
+  name   = "/infra/${var.environment}/networking/default_security_group_id"
+}
+
+data "aws_ssm_parameter" "systems_manager_security_group_id" {
+  name   = "/infra/${var.environment}/networking/systems_manager_security_group_id"
+}
+
+
+#
+# Data: VPC Endpoint Policies
+#
 data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
   statement {
     effect    = "Deny"
@@ -24,7 +50,7 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
       test     = "StringNotEquals"
       variable = "aws:sourceVpce"
 
-      values = [module.vpc.vpc_id]
+      values = [data.aws_ssm_parameter.vpc_id.value]
     }
   }
 }
@@ -44,7 +70,7 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
       test     = "StringNotEquals"
       variable = "aws:SourceVpc"
 
-      values = [module.vpc.vpc_id]
+      values = [data.aws_ssm_parameter.vpc_id.value]
     }
   }
 }
