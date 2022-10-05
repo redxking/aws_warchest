@@ -1,4 +1,5 @@
 locals {
+  vpc_private_subnet_ids = split(",", data.aws_ssm_parameter.vpc_private_subnet_ids.value)
   jumpbox_amis = {
     us-east-1      = "ami-02538f8925e3aa27a",
     us-west-2      = "ami-07d59d159373b8030",
@@ -52,17 +53,17 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "4.1.4"
 
-  for_each = toset(module.vpc.private_subnets)
+  for_each = nonsensitive(toset(local.vpc_private_subnet_ids))
 
-  name = "jumpbox-${index(module.vpc.private_subnets, each.value) + 1}"
+  name = "jumpbox-${index(local.vpc_private_subnet_ids, each.value) + 1}"
 
   ami                    = local.jumpbox_amis[var.region]
   instance_type          = "t2.micro"
   key_name               = "jumpbox"
   monitoring             = true
   vpc_security_group_ids = [
-    module.transit_gateway_sg.security_group_id,
-    module.systems_manager_sg.security_group_id
+    data.aws_ssm_parameter.transit_gateway_security_group_id.value,
+    data.aws_ssm_parameter.systems_manager_security_group_id.value
   ]
   subnet_id              = each.value
   iam_instance_profile   = aws_iam_instance_profile.jumpbox_profile.id
@@ -70,8 +71,5 @@ module "ec2_instance" {
   # Tag(s)
   tags = merge(local.tags, {
     "Type": "jumpbox"
-  })
-  
-  # Dependency(s)
-  depends_on = [module.vpc]
+  }) 
 }
