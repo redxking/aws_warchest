@@ -1,6 +1,6 @@
-#
-# VPC Settngs
-#
+################################################################################
+# Settings: VPC - Workload
+################################################################################
 vpc_name = "workload"
 vpc_cidr_block = {
    us-east-1 = "172.16.152.0/21"
@@ -22,9 +22,9 @@ vpc_tags                   = {
     "Propagate-to": "Flat" 
 }
 
-# 
-# Subnet Settings: Transit Gateway
-#
+################################################################################
+# Settings: Subnet - Transit Gateway
+################################################################################
 vpc_intra_subnet_cidr_blocks           = {
     us-east-1 = ["172.16.152.0/24", "172.16.153.0/24"]
 }
@@ -87,9 +87,9 @@ vpc_intra_subnet_tags                  = {
     "Attach-to-tgw": "STNO" 
 }
 
-#
-# Subnet Settings: Private
-#
+################################################################################
+# Settings: Subnet - Private
+################################################################################
 vpc_private_subnet_cidr_blocks    = {
    us-east-1 = ["172.16.154.0/24", "172.16.155.0/24"]
 }
@@ -98,13 +98,13 @@ vpc_private_subnet_tags   = {
     "Type": "private"
 }
 
-#
-# Subnet Settings: Public
-#
+################################################################################
+# Settings: Subnet - Public
+################################################################################
 vpc_public_subnet_cidr_blocks    = {
     us-east-1 = ["172.16.156.0/24", "172.16.157.0/24"]
 }
 vpc_public_subnet_suffix  = "public"
 vpc_public_subnet_tags    = {
     "Type": "public"
-}}
+}
