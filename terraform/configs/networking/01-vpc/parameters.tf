@@ -637,7 +637,7 @@ resource "aws_ssm_parameter" "intra_route_table_ids" {
 }
 
 resource "aws_ssm_parameter" "public_internet_gateway_route_id" {
-  count       = length(module.vpc.public_internet_gateway_route_id) > 0 ? 1 : 0
+  count       = local.create_related_internet_gateway_resources ? 1 : 0
 
   description = "ID of the internet gateway route"
   name        = "/infra/${var.environment}/networking/public_internet_gateway_route_id"
@@ -832,7 +832,7 @@ resource "aws_ssm_parameter" "natgw_ids" {
 }
 
 resource "aws_ssm_parameter" "igw_id" {
-  count       = length(module.vpc.igw_id) > 0 ? 1 : 0
+  count       = local.create_related_internet_gateway_resources ? 1 : 0
 
   description = "The ID of the Internet Gateway"
   name        = "/infra/${var.environment}/networking/igw_id"
@@ -847,7 +847,7 @@ resource "aws_ssm_parameter" "igw_id" {
 }
 
 resource "aws_ssm_parameter" "igw_arn" {
-  count       = length(module.vpc.igw_arn) > 0 ? 1 : 0
+  count       = local.create_related_internet_gateway_resources ? 1 : 0
 
   description = "The ARN of the Internet Gateway"
   name        = "/infra/${var.environment}/networking/igw_arn"

@@ -161,7 +161,7 @@ deployments:
       commons: false
       sandbox: false
       develop: true
-      staging: false
+      staging: true
       product: false
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}

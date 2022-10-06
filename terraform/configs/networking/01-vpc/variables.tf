@@ -94,6 +94,12 @@ variable "vpc_customer_gateways" {
   default     = {}
 }
 
+variable "vpc_tags" {
+  description = "Additional tags for the VPC"
+  type        = map(string)
+  default     = {}
+}
+
 variable "vpc_database_subnet_cidr_blocks" {
     description = "Subnet CIDR(s) of the VPC to create: Database"
     type        = map(list(string))
@@ -152,6 +158,24 @@ variable "vpc_intra_subnet_suffix" {
     description = "Subnet Suffix of the VPC to create: Intra (Transit Gateway)"
     type        = string
     default     = null
+}
+
+variable "vpc_intra_subnet_dedicated_network_acl" {
+    description = "Whether to use dedicated network ACL (not default) and custom rules: Intra (Transit Gateway)"
+    type        = bool 
+    default     = false 
+}
+
+variable "vpc_intra_subnet_inbound_acl_rules" {
+    description = "List of maps of inbound rules to set on the Network ACL: Intra (Transit Gateway)"
+    type        = list(map(string)) 
+    default     = []
+}
+
+variable "vpc_intra_subnet_outbound_acl_rules" {
+    description = "List of maps of outbound rules to set on the Network ACL: Intra (Transit Gateway)"
+    type        = list(map(string)) 
+    default     = []
 }
 
 variable "vpc_intra_subnet_tags" {

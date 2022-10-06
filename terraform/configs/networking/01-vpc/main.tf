@@ -65,7 +65,11 @@ module "vpc" {
 
   intra_subnets                   = lookup(var.vpc_intra_subnet_cidr_blocks, var.region, [])
   intra_subnet_suffix             = var.vpc_intra_subnet_suffix
+  intra_dedicated_network_acl     = var.vpc_intra_subnet_dedicated_network_acl
+  intra_inbound_acl_rules         = var.vpc_intra_subnet_inbound_acl_rules
+  intra_outbound_acl_rules        = var.vpc_intra_subnet_outbound_acl_rules
   intra_subnet_tags               = var.vpc_intra_subnet_tags
+  
 
   private_subnets                 = lookup(var.vpc_private_subnet_cidr_blocks, var.region, [])
   private_subnet_suffix           = var.vpc_private_subnet_suffix
@@ -90,5 +94,6 @@ module "vpc" {
   flow_log_cloudwatch_log_group_retention_in_days = var.vpc_flow_log_cloudwatch_log_group_retention
 
   # Tag(s)
-  tags = local.tags 
+  tags     = local.tags
+  vpc_tags = var.vpc_tags 
 }
