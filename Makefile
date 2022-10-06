@@ -9,6 +9,9 @@ runway-deploy-network:
 runway-deploy-commons:
 	@CI=1 DEPLOY_ENVIRONMENT=commons runway deploy
 
+runway-deploy-sandbox:
+	@CI=1 DEPLOY_ENVIRONMENT=sandbox runway deploy
+
 runway-deploy-develop:
 	@CI=1 DEPLOY_ENVIRONMENT=develop runway deploy
 

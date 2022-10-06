@@ -158,11 +158,11 @@ deployments:
       audit:   false
       archive: false
       network: false
-      commons: false
+      commons: true 
       sandbox: false
       develop: true
       staging: true
-      product: false
+      product: true 
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       environment: ${env DEPLOY_ENVIRONMENT}

@@ -3,7 +3,7 @@
 #
 vpc_name = "workload"
 vpc_cidr_block = {
-   us-east-1 = "172.16.128.0/21"
+   us-east-1 = "172.16.144.0/21"
 }
 vpc_availability_zones = {
     us-east-1 = ["us-east-1a", "us-east-1b"]
@@ -21,7 +21,7 @@ vpc_flow_log_cloudwatch_log_group_retention = 14
 # Subnet Settings: Transit Gateway
 #
 vpc_intra_subnet_cidr_blocks      = {
-    us-east-1 = ["172.16.128.0/24", "172.16.129.0/24"]
+    us-east-1 = ["172.16.144.0/24", "172.16.145.0/24"]
 }
 vpc_intra_subnet_suffix    = "transit-gateway"
 vpc_intra_subnet_tags      = {
@@ -33,7 +33,7 @@ vpc_intra_subnet_tags      = {
 # Subnet Settings: Database
 #
 vpc_database_subnet_cidr_blocks   = {
-    us-east-1 = ["172.16.130.0/24", "172.16.131.0/24"]
+    us-east-1 = ["172.16.146.0/24", "172.16.147.0/24"]
 }
 vpc_database_subnet_suffix = "database"
 vpc_database_subnet_tags   = {
@@ -46,7 +46,7 @@ vpc_create_database_subnet_group = true
 # Subnet Settings: Private
 #
 vpc_private_subnet_cidr_blocks    = {
-   us-east-1 = ["172.16.132.0/24", "172.16.133.0/24"]
+   us-east-1 = ["172.16.148.0/24", "172.16.149.0/24"]
 }
 vpc_private_subnet_suffix = "private"
 vpc_private_subnet_tags   = {
@@ -57,7 +57,7 @@ vpc_private_subnet_tags   = {
 # Subnet Settings: Public
 #
 vpc_public_subnet_cidr_blocks    = {
-    us-east-1 = ["172.16.134.0/24", "172.16.135.0/24"]
+    us-east-1 = ["172.16.150.0/24", "172.16.151.0/24"]
 }
 vpc_public_subnet_suffix  = "public"
 vpc_public_subnet_tags    = {
