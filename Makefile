@@ -23,3 +23,6 @@ runway-deploy-staging:
 
 runway-deploy-product:
 	@CI=1 DEPLOY_ENVIRONMENT=product runway deploy
+
+runway-destroy-product:
+	@CI=1 DEPLOY_ENVIRONMENT=product runway destroy
