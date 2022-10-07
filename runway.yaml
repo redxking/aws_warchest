@@ -193,7 +193,7 @@ deployments:
       audit:   false
       archive: false
       network: false
-      commons: false
+      commons: true 
       sandbox: false
       develop: false
       staging: false
