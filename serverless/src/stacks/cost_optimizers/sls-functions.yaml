@@ -2,14 +2,11 @@
 
 functions:
   vote-registry:
-    handler:  ${self:custom.sls_services_path}/func-vote-registry.lambda_handler
+    handler:  ${self:custom.sls_services_path}/func-ec2-jumpbox.lambda_handler
     runtime: python3.9
     timeout: ${self:custom.sls_settings_obj.timeout}
     memorySize: ${self:custom.sls_settings_obj.memorySize}
     events:
-      - http:
-          path: vote-registry
-          method: post
-          cors: true
+      - schedule: cron(0 0 7 ? * * *)
     environment:
       DUMMY_MSG: ${self:custom.sls_settings_obj.DUMMY_MSG}
