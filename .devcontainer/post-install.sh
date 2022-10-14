@@ -15,4 +15,10 @@ poetry config virtualenvs.in-project true
 # Now install all dependencies
 poetry install
 
+
+##
+## Node and npm project configuration & deps
+##
+sudo npm install -g serverless
+
 echo "Done!"

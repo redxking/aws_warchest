@@ -9,6 +9,7 @@ ARG TF_VERSION="1.2.5"
 ARG TF_DOCS_VERSION="v0.16.0"
 ARG IAMLIVE_VERSION="v0.48.0"
 ARG NVM_VERSION="v0.39.1"
+ARG NODE_VERSION="16.x"
 
 # ROOT user commands
 # [Optional] Uncomment this section to install additional OS packages.
@@ -49,10 +50,15 @@ RUN curl -sSLo ./iamlive.tar.gz https://github.com/iann0036/iamlive/releases/dow
 RUN curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
 # Set up nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash \
-    && export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" \
-    && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
-    && nvm install 16
+#RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash \
+#    && export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" \
+#    && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
+#    && nvm install 16
+
+# Install npm and nodejs
+# Install from nodesource using apt-get
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION} | bash - && apt-get install -y nodejs
+RUN npm install -g npm
 
 # Symlink /usr/bin/python to /usr/bin/python3
 RUN sudo ln -s /usr/bin/python3 /usr/bin/python

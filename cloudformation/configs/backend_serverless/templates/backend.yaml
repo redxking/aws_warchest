@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: > 
+  Cloudformation Template for Provisioning S3 Bucket to hold Serverless State - v0.0.1
+
+Parameters:
+  pStateBucketPrefix:
+    Description: Prefix of the S3 Bucket Name
+    Type: String   
+
+Resources:
+  rStateS3Bucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub "${pStateBucketPrefix}-${AWS::AccountId}-${AWS::Region}"
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled 
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  rStateS3BucketBucketPolicy:
+    DependsOn:
+      - rStateS3Bucket
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref rStateS3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: DenyDeletingStateFiles
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:DeleteObject"
+            Resource: !Sub "arn:aws:s3:::${rStateS3Bucket}/*"
+
+Outputs:
+  oStateS3Bucket:
+    Description: Name of the Serverless State S3 Bucket
+    Value: !Ref rStateS3Bucket
+    Export:
+      Name: !Sub ${AWS::StackName}-oBucketName

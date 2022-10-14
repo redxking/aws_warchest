@@ -8,7 +8,8 @@
         "nvm": "^0.0.4"
     },
     "devDependencies": {
-        "serverless": "3.7.4",
+        "serverless": "^3.7.4",
+        "serverless-plugin-resource-tagging": "^1.2.0",
         "serverless-s3-sync": "^3.0.0",
         "serverless-webpack": "5.6.1"
     }

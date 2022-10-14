@@ -1,5 +1,17 @@
 ---
 
+commons:
+  timeout: 10
+  memorySize: 128
+
+  DUMMY_MSG: "Hello World: Commons"
+
+sandbox:
+  timeout: 10
+  memorySize: 128
+
+  DUMMY_MSG: "Hello World: Sandbox"
+
 develop:
   timeout: 10
   memorySize: 128

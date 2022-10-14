@@ -7,11 +7,10 @@ common_tags: &common_tags
 
 
 stacks:
-  terraform-state:
-    template_path: templates/terraform_backend.yaml
+  serverless-state:
+    template_path: templates/backend.yaml
     termination_protection: true
     variables:
-      pTerraformStateBucketPrefix: ${namespace}-terraform-state
-      pTerraformStateLockTableName: ${namespace}-terraform-state-lock
+      pStateBucketPrefix: ${namespace}-serverless-state
     tags:
       <<: *common_tags

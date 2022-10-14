@@ -16,9 +16,6 @@ custom:
   # Service Custom Variables
   #   -- add here.
 
-
-plugins: ${self:custom.EmptyArray}
-
 functions: ${file(${self:custom.sls_functions_path}):functions}
 resources: ${file(${self:custom.sls_resources_path}):resources}
 permissions: ${file(${self:custom.sls_permissions_path}):permissions}

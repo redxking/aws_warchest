@@ -29,15 +29,42 @@ deployments:
   ##############################################################################
   # AWS Cloudformation to automate the deployment of Terraform Backend State
   # Management in the AWS Cloud.
-  - name: terraform-backend
+  - name: backend-terraform
     modules:
-      - path: cloudformation/configs/terraform_backend
+      - path: cloudformation/configs/backend_terraform
         type: cloudformation
     environments:
       master:  true
       audit:   true
       archive: true
       network: true
+      commons: true
+      sandbox: true
+      develop: true
+      staging: true
+      product: true
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+    parallel_regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: true
+  
+  ##############################################################################
+  # AWS Cloudformation to automate the deployment of Serverless Backend State
+  # Management in the AWS Cloud.
+  - name: backend-serverless
+    modules:
+      - path: cloudformation/configs/backend_serverless
+        type: cloudformation
+    environments:
+      master:  false
+      audit:   false
+      archive: false
+      network: false
       commons: true
       sandbox: true
       develop: true
@@ -177,15 +204,15 @@ deployments:
   ###############################################################################
   # Serverless Framework to automate the deployment of Lambda Functions and their
   # supporting resources in the AWS Cloud.
-  - name: monitoring
+  - name: cost_optimizers 
     modules:
       - path: serverless
         type: serverless
         parameters:
           dummy: true
         env_vars:
-          APP: monitoring
-          STACK: client-api
+          stack: cost-optimizers 
+          deployment_bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-serverless-state.oStateS3Bucket}
         options:
           skip_npm_ci: false
     environments:
@@ -198,6 +225,13 @@ deployments:
       develop: false
       staging: false
       product: false
+    parameters:
+      ACCOUNT_ID_MASTER:  922481319116
+      ACCOUNT_ID_NETWORK: 485355486848 
+      ACCOUNT_ID_SANDBOX: 535005587294 
+      ACCOUNT_ID_DEVELOP: 648027066783
+      ACCOUNT_ID_STAGING: 875358465253
+      ACCOUNT_ID_PRODUCT: 727515289814
     regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
