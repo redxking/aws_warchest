@@ -1,3 +1,11 @@
 ---
 
-permissions: ${self:custom.EmptyArray}
+permissions:
+  - Effect: Allow
+    Action: 
+      - sts:AssumeRole
+    Resource:
+      - "arn:aws:iam::${env:account_id_sandbox}:role/CrossAcctAutomationExecutionRole"
+      - "arn:aws:iam::${env:account_id_develop}:role/CrossAcctAutomationExecutionRole"
+      - "arn:aws:iam::${env:account_id_staging}:role/CrossAcctAutomationExecutionRole"
+      - "arn:aws:iam::${env:account_id_product}:role/CrossAcctAutomationExecutionRole"

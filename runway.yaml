@@ -200,6 +200,40 @@ deployments:
     assume_role:
       arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
       post_deploy_env_revert: true
+ 
+ ###############################################################################
+ # Terraform to automate the deployment of IAM Roles and their supporting resources
+ # in the AWS Cloud.
+  - name: iam-role-and-policies
+    modules:
+      - path: terraform/configs/iam/01-roles
+        type: terraform
+    module_options:
+      terraform_version: "1.2.5"
+      terraform_backend_config:
+        bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-terraform-state.oTerraformStateS3Bucket}
+        dynamodb_table: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-terraform-state.oTerraformStateLockDynamoDBTable}
+        region: ${env AWS_REGION}
+    environments:
+      master:  false
+      audit:   false
+      archive: false
+      network: false
+      commons: true 
+      sandbox: true
+      develop: true
+      staging: true
+      product: true 
+    parameters:
+      namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
+      environment: ${env DEPLOY_ENVIRONMENT}
+      region: ${env AWS_REGION}
+    parallel_regions:
+      - us-east-1
+    account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
+    assume_role:
+      arn: ${var assume_role.${env DEPLOY_ENVIRONMENT}}
+      post_deploy_env_revert: true
 
   ###############################################################################
   # Serverless Framework to automate the deployment of Lambda Functions and their
@@ -208,11 +242,15 @@ deployments:
     modules:
       - path: serverless
         type: serverless
-        parameters:
-          dummy: true
         env_vars:
           stack: cost-optimizers 
           deployment_bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-serverless-state.oStateS3Bucket}
+          account_id_network: 485355486848
+          account_id_commons: 187739744457 
+          account_id_sandbox: 535005587294 
+          account_id_develop: 648027066783
+          account_id_staging: 875358465253
+          account_id_product: 727515289814
         options:
           skip_npm_ci: false
     environments:
@@ -225,13 +263,6 @@ deployments:
       develop: false
       staging: false
       product: false
-    parameters:
-      ACCOUNT_ID_MASTER:  922481319116
-      ACCOUNT_ID_NETWORK: 485355486848 
-      ACCOUNT_ID_SANDBOX: 535005587294 
-      ACCOUNT_ID_DEVELOP: 648027066783
-      ACCOUNT_ID_STAGING: 875358465253
-      ACCOUNT_ID_PRODUCT: 727515289814
     regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}

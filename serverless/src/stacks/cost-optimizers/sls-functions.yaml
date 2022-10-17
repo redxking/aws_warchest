@@ -8,6 +8,5 @@ functions:
     memorySize: ${self:custom.sls_settings_obj.memorySize}
     events:
       - schedule: cron(0 7 * * ? *)
-        enabled: true
     environment:
       DUMMY_MSG: ${self:custom.sls_settings_obj.DUMMY_MSG}
