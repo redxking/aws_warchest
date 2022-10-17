@@ -14,7 +14,8 @@ provider:
   deploymentBucket:
     name: ${env:deployment_bucket}
     serverSideEncryption: AES256
-  iamRoleStatements: ${file(${self:provider.environment.sls_stack_path}/stack-config.yaml):permissions}
+  logRetentionInDays: 30
+  iam: ${file(${self:provider.environment.sls_stack_path}/stack-config.yaml):permissions}
   environment:
     sls_stack_path: src/stacks/${env:stack, 'dummy'}
   stackTags:
