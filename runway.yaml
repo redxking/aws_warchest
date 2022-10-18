@@ -228,6 +228,12 @@ deployments:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       environment: ${env DEPLOY_ENVIRONMENT}
       region: ${env AWS_REGION}
+      account_id_network: 485355486848
+      account_id_commons: 187739744457 
+      account_id_sandbox: 535005587294 
+      account_id_develop: 648027066783
+      account_id_staging: 875358465253
+      account_id_product: 727515289814
     parallel_regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}

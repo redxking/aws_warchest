@@ -2,9 +2,9 @@ import json
 import os
 import boto3
 
+TARGET_ACCT_NAMES = ["Develop"]
+TARGET_ACCT_IAM_ROLE_NAME = "CrossAcctAutomationExecutionRole"
 
-MASTER_ACCT_IAM_ROLE_NAME = os.environ['MASTER_ACCT_ROLE_NAME']
-TARGET_ACCT_IAM_ROLE_NAME = os.environ['TARGET_ACCT_ROLE_NAME']
 
 JUMPBOX_EC2_FILTERS = [
     {'Name': 'instance-state-name', 'Values': ['running']},
@@ -20,7 +20,7 @@ def assume_iam_role(account_id, role_name):
     )
   
     return { 
-        'aws_access_key': acct_b['Credentials']['AccessKeyId'],
+        'aws_access_key_id': acct_b['Credentials']['AccessKeyId'],
         'aws_secret_access_key': acct_b['Credentials']['SecretAccessKey'],
         'aws_session_token': acct_b['Credentials']['SessionToken']
     }
@@ -32,11 +32,8 @@ def create_boto_client(aws_service, account_id='', role_name=''):
     # create service client using the assumed role credentials
     return boto3.client(aws_service, **creds)
 
-def extract_org_details(cli, filters=[]):
-    return cli.describe_organization()['Organization']
-
-def extract_org_accounts(cli, filters=[]):
-    extra_args = {'Filters': filters}
+def extract_org_accounts(cli):
+    extra_args = {}
     while True:
         resp = cli.list_accounts(**extra_args)
         yield from resp['Accounts']
@@ -61,15 +58,12 @@ def extract_ec2_instances(cli, filters=[]):
 
 def main():
 
-    commons_org_cli = create_boto_client('organizations')
-    master_acct_id = extract_org_details(commons_org_cli)['MasterAccountId']
+    org_cli = create_boto_client('organizations')
 
-    master_org_cli  = create_boto_client(
-        'organizations', 
-        master_acct_id, 
-        MASTER_ACCT_IAM_ROLE_NAME
-    )
-    for account in extract_org_accounts(master_org_cli):
+    for account in extract_org_accounts(org_cli):
+        if not account["Name"] in TARGET_ACCT_NAMES:
+            continue
+
         print(f'Extracted Account - Id: {account["Id"]}, Name: {account["Name"]}')
         target_ec2_cli = create_boto_client(
             'ec2',
@@ -82,7 +76,7 @@ def main():
         if jumpbox_instance_ids:
             print(target_ec2_cli.stop_instances(
               InstanceIds=jumpbox_instance_ids,
-              DryRun=True
+              DryRun=False
             ))
 
 

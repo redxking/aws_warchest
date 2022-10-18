@@ -29,7 +29,7 @@ resource "aws_iam_role" "cross_acct_automation_lambda" {
 
   name                = "CrossAcctAutomationLambdaRole"
   assume_role_policy  = data.aws_iam_policy_document.cross_acct_automation_lambda.json
-  managed_policy_arns = [aws_iam_policy.cross_acct_automation_lambda.arn]
+  managed_policy_arns = [aws_iam_policy.cross_acct_automation_lambda[0].arn]
 }
 
 resource "aws_iam_policy" "cross_acct_automation_lambda" {
@@ -43,11 +43,16 @@ resource "aws_iam_policy" "cross_acct_automation_lambda" {
         Action   = ["sts:AssumeRole"]
         Effect   = "Allow"
         Resource = [
-          "arn:aws:iam::${var.account_id_sandbox}:role/CrossAcctAutomationExecRole",
-          "arn:aws:iam::${var.account_id_develop}:role/CrossAcctAutomationExecRole",
-          "arn:aws:iam::${var.account_id_staging}:role/CrossAcctAutomationExecRole",
-          "arn:aws:iam::${var.account_id_product}:role/CrossAcctAutomationExecRole",
+          "arn:aws:iam::${var.account_id_sandbox}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_id_develop}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_id_staging}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_id_product}:role/CrossAcctAutomationExecutionRole",
         ] 
+      },
+      {
+        Action   = ["organizations:ListAccounts"]
+        Effect   = "Allow"
+        Resource = "*"
       },
     ]
   })
@@ -75,7 +80,7 @@ resource "aws_iam_role" "cross_acct_automation_exec" {
   
   name                = "CrossAcctAutomationExecutionRole"
   assume_role_policy  = data.aws_iam_policy_document.cross_acct_automation_exec.json
-  managed_policy_arns = [aws_iam_policy.cross_acct_automation_exec.arn]
+  managed_policy_arns = [aws_iam_policy.cross_acct_automation_exec[0].arn]
 }
 
 resource "aws_iam_policy" "cross_acct_automation_exec" {

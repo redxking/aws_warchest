@@ -1,0 +1,2 @@
+create_cross_account_automation_lambda_role = true
+create_cross_account_automation_exec_role = false

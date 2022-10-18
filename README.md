@@ -73,3 +73,8 @@ Collection of Terraform, Cloudformation and Serverless Framework Resources and M
 | -            | -            | subnet | public-1b     | us-east-1      | us-east-1b        | 172.16.165.0/24   | 255.255.255.0   | 172.16.152.0   - 172.16.145.255   | 172.16.145.1   - 172.16.145.254   | 256   |
 | -            | -            | subnet | private-1a    | us-east-1      | us-east-1a        | 172.16.166.0/24   | 255.255.255.0   | 172.16.153.0   - 172.16.146.255   | 172.16.146.1   - 172.16.146.254   | 256   |
 | -            | -            | subnet | private-1b    | us-east-1      | us-east-1b        | 172.16.167.0/24   | 255.255.255.0   | 172.16.154.0   - 172.16.147.255   | 172.16.147.1   - 172.16.147.254   | 256   |
+
+
+### Enables AWS Account (Commons) as Delegated Admin for Organization
+    - https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-trusted-access.html
+    - https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-delegated-admin.html
