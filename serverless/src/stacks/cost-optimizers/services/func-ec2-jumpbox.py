@@ -13,6 +13,8 @@ JUMPBOX_EC2_FILTERS = [
       
 
 def assume_iam_role(account_id, role_name):
+    '''Assume Cross Account IAM Role
+    '''
     sts_connection = boto3.client('sts')
     acct_b = sts_connection.assume_role(
         RoleArn=f'arn:aws:iam::{account_id}:role/{role_name}',
@@ -26,6 +28,8 @@ def assume_iam_role(account_id, role_name):
     }
 
 def create_boto_client(aws_service, account_id='', role_name=''):
+    '''Cteate Boro3 Client
+    '''
     creds = {}
     if account_id and role_name:
         creds = assume_iam_role(account_id, role_name)
@@ -33,6 +37,8 @@ def create_boto_client(aws_service, account_id='', role_name=''):
     return boto3.client(aws_service, **creds)
 
 def extract_org_accounts(cli):
+    '''Extract AWS Organization Accounts
+    '''
     extra_args = {}
     while True:
         resp = cli.list_accounts(**extra_args)
@@ -44,6 +50,8 @@ def extract_org_accounts(cli):
         extra_args['NextToken'] = resp['NextToken']
 
 def extract_ec2_instances(cli, filters=[]):
+    '''Extract AWS EC2 Instances
+    '''
     extra_args = {'Filters': filters}
     while True:
         resp = cli.describe_instances(**extra_args)
