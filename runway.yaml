@@ -186,7 +186,7 @@ deployments:
       archive: false
       network: false
       commons: true 
-      sandbox: false
+      sandbox: true
       develop: true
       staging: true
       product: true 
@@ -249,6 +249,7 @@ deployments:
       - path: serverless
         type: serverless
         env_vars:
+          namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
           stack: cost-optimizers 
           deployment_bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-serverless-state.oStateS3Bucket}
           account_id_network: 485355486848

@@ -19,6 +19,6 @@ poetry install
 ##
 ## Node and npm project configuration & deps
 ##
-sudo npm install -g serverless
+sudo npm install -g serverless@3.23.0
 
 echo "Done!"

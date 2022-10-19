@@ -30,6 +30,9 @@ resource "aws_iam_role" "cross_acct_automation_lambda" {
   name                = "CrossAcctAutomationLambdaRole"
   assume_role_policy  = data.aws_iam_policy_document.cross_acct_automation_lambda.json
   managed_policy_arns = [aws_iam_policy.cross_acct_automation_lambda[0].arn]
+
+ # Tag(s)
+  tags = local.tags 
 }
 
 resource "aws_iam_policy" "cross_acct_automation_lambda" {
@@ -56,6 +59,9 @@ resource "aws_iam_policy" "cross_acct_automation_lambda" {
       },
     ]
   })
+ 
+ # Tag(s)
+  tags = local.tags 
 }
 
 ################################################################################
@@ -81,6 +87,9 @@ resource "aws_iam_role" "cross_acct_automation_exec" {
   name                = "CrossAcctAutomationExecutionRole"
   assume_role_policy  = data.aws_iam_policy_document.cross_acct_automation_exec.json
   managed_policy_arns = [aws_iam_policy.cross_acct_automation_exec[0].arn]
+ 
+ # Tag(s)
+  tags = local.tags 
 }
 
 resource "aws_iam_policy" "cross_acct_automation_exec" {
@@ -102,4 +111,7 @@ resource "aws_iam_policy" "cross_acct_automation_exec" {
       },
     ]
   })
+ 
+ # Tag(s)
+  tags = local.tags 
 }

@@ -9,8 +9,8 @@ plugins:
 
 provider:
   name: aws
-  region: ${opt:region, 'us-east-1'}
-  stage: ${opt:stage, 'develop'}
+  region: ${opt:region}
+  stage: ${opt:stage}
   deploymentBucket:
     name: ${env:deployment_bucket}
     serverSideEncryption: AES256
@@ -19,7 +19,10 @@ provider:
   environment:
     sls_stack_path: src/stacks/${env:stack, 'dummy'}
   stackTags:
-    provisioner: 'serverless'
+    Namespace: ${env:namespace} 
+    Environment: ${opt:stage}
+    Region: ${opt:region}
+    Provisioner: 'serverless'
 
 
 custom: ${file(${self:provider.environment.sls_stack_path}/stack-config.yaml):custom}

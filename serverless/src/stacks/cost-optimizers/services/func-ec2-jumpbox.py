@@ -2,7 +2,7 @@ import json
 import os
 import boto3
 
-TARGET_ACCT_NAMES = ["Develop"]
+TARGET_ACCT_NAMES = ["sandox", "develop", "staging", "product"]
 TARGET_ACCT_IAM_ROLE_NAME = "CrossAcctAutomationExecutionRole"
 
 
@@ -61,7 +61,7 @@ def main():
     org_cli = create_boto_client('organizations')
 
     for account in extract_org_accounts(org_cli):
-        if not account["Name"] in TARGET_ACCT_NAMES:
+        if not account["Name"].lower() in TARGET_ACCT_NAMES:
             continue
 
         print(f'Extracted Account - Id: {account["Id"]}, Name: {account["Name"]}')
@@ -78,8 +78,6 @@ def main():
               InstanceIds=jumpbox_instance_ids,
               DryRun=False
             ))
-
-
 
 def lambda_handler(event, context):
     main()
