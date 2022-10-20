@@ -43,4 +43,6 @@ jobs:
       # Deploy: Runway - Sandbox 
       #----------------------------------------------
       - name: Runway Deploy
-        run: make runway-deploy-sandbox
+        run: |
+          source .venv/bin/activate 
+          make runway-deploy-sandbox
