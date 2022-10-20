@@ -182,3 +182,132 @@ jobs:
         run: |
           source .venv/bin/activate
           make runway-deploy-sandbox
+  develop:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      # Check-out Repo and Setup Python
+      #----------------------------------------------
+      - name: Check Out Repository
+        uses: actions/checkout@v3
+      - name: Setup Python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.8
+      #----------------------------------------------
+      # Install and Configure Poetry 
+      #----------------------------------------------
+      - name: Configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      #----------------------------------------------
+      # Install Poetry Dependencies 
+      #----------------------------------------------
+      - name: Install Dependencies
+        run: poetry install --no-interaction
+      #----------------------------------------------
+      # Configure AWS Credentials 
+      #---------------------------------------------- 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #----------------------------------------------
+      # Deploy: Runway - Develop
+      #----------------------------------------------
+      - name: Runway Deploy (Develop) 
+        run: |
+          source .venv/bin/activate
+          make runway-deploy-develop
+  staging:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      # Check-out Repo and Setup Python
+      #----------------------------------------------
+      - name: Check Out Repository
+        uses: actions/checkout@v3
+      - name: Setup Python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.8
+      #----------------------------------------------
+      # Install and Configure Poetry 
+      #----------------------------------------------
+      - name: Configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      #----------------------------------------------
+      # Install Poetry Dependencies 
+      #----------------------------------------------
+      - name: Install Dependencies
+        run: poetry install --no-interaction
+      #----------------------------------------------
+      # Configure AWS Credentials 
+      #---------------------------------------------- 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #----------------------------------------------
+      # Deploy: Runway - Staging 
+      #----------------------------------------------
+      - name: Runway Deploy (Staging) 
+        run: |
+          source .venv/bin/activate
+          make runway-deploy-staging
+  product:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      # Check-out Repo and Setup Python
+      #----------------------------------------------
+      - name: Check Out Repository
+        uses: actions/checkout@v3
+      - name: Setup Python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.8
+      #----------------------------------------------
+      # Install and Configure Poetry 
+      #----------------------------------------------
+      - name: Configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      #----------------------------------------------
+      # Install Poetry Dependencies 
+      #----------------------------------------------
+      - name: Install Dependencies
+        run: poetry install --no-interaction
+      #----------------------------------------------
+      # Configure AWS Credentials 
+      #---------------------------------------------- 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #----------------------------------------------
+      # Deploy: Runway - Product 
+      #----------------------------------------------
+      - name: Runway Deploy (Product) 
+        run: |
+          source .venv/bin/activate
+          make runway-deploy-product
