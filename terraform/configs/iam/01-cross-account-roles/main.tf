@@ -46,10 +46,10 @@ resource "aws_iam_policy" "cross_acct_automation_lambda" {
         Action   = ["sts:AssumeRole"]
         Effect   = "Allow"
         Resource = [
-          "arn:aws:iam::${var.account_id_sandbox}:role/CrossAcctAutomationExecutionRole",
-          "arn:aws:iam::${var.account_id_develop}:role/CrossAcctAutomationExecutionRole",
-          "arn:aws:iam::${var.account_id_staging}:role/CrossAcctAutomationExecutionRole",
-          "arn:aws:iam::${var.account_id_product}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_ids["sandbox"]}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_ids["develop"]}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_ids["staging"]}:role/CrossAcctAutomationExecutionRole",
+          "arn:aws:iam::${var.account_ids["product"]}:role/CrossAcctAutomationExecutionRole",
         ] 
       },
       {
@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "cross_acct_automation_exec" {
     principals {
       type        = "AWS"
       identifiers = [
-        "arn:aws:iam::${var.account_id_commons}:role/CrossAcctAutomationLambdaRole"
+        "arn:aws:iam::${var.account_ids["commons"]}:role/CrossAcctAutomationLambdaRole"
       ]
     }
   }
