@@ -1,29 +1,6 @@
 ---
 ignore_git_branch: true
 
-variables:
-  customer: the-dev-team
-  account_id:
-    master:  922481319116
-    audit:   260992085298
-    archive: 974093653591 
-    network: 485355486848 
-    commons: 187739744457
-    sandbox: 535005587294 
-    develop: 648027066783
-    staging: 875358465253
-    product: 727515289814
-  assume_role:
-    master:  arn:aws:iam::922481319116:role/AWSAdministratorAccess
-    audit:   arn:aws:iam::260992085298:role/AWSControlTowerExecution
-    archive: arn:aws:iam::974093653591:role/AWSControlTowerExecution
-    network: arn:aws:iam::485355486848:role/AWSControlTowerExecution
-    commons: arn:aws:iam::187739744457:role/AWSControlTowerExecution
-    sandbox: arn:aws:iam::535005587294:role/AWSControlTowerExecution
-    develop: arn:aws:iam::648027066783:role/AWSControlTowerExecution
-    staging: arn:aws:iam::875358465253:role/AWSControlTowerExecution
-    product: arn:aws:iam::727515289814:role/AWSControlTowerExecution
-
 
 deployments:
   ##############################################################################
