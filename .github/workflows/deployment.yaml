@@ -43,10 +43,15 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #----------------------------------------------
-      # Deploy: Runway - Sandbox 
+      # Deploy: Runway - All Environments 
       #----------------------------------------------
-      - name: Runway Deploy
+      - name: Runway Deploy All Environments
         run: |
-          source .venv/bin/activate 
+          source .venv/bin/activate
+          make runway-deploy-master
+          make runway-deploy-network
+          make runway-deploy-commons
           make runway-deploy-sandbox
           make runway-deploy-develop
+          make runway-deploy-staging
+          make runway-deploy-product
