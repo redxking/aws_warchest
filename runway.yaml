@@ -229,12 +229,6 @@ deployments:
           namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
           stack: cost-optimizers 
           deployment_bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-serverless-state.oStateS3Bucket}
-          account_id_network: ${var account_id.network}
-          account_id_commons: ${var account_id.commons}
-          account_id_sandbox: ${var account_id.sandbox} 
-          account_id_develop: ${var account_id.develop}
-          account_id_staging: ${var account_id.staging}
-          account_id_product: ${var account_id.product}
         options:
           skip_npm_ci: false
     environments:
