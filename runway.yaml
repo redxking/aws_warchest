@@ -228,12 +228,12 @@ deployments:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       environment: ${env DEPLOY_ENVIRONMENT}
       region: ${env AWS_REGION}
-      account_id_network: 485355486848
-      account_id_commons: 187739744457 
-      account_id_sandbox: 535005587294 
-      account_id_develop: 648027066783
-      account_id_staging: 875358465253
-      account_id_product: 727515289814
+      account_id_network: ${var account_id.network}
+      account_id_commons: ${var account_id.commons}
+      account_id_sandbox: ${var account_id.sandbox} 
+      account_id_develop: ${var account_id.develop}
+      account_id_staging: ${var account_id.staging}
+      account_id_product: ${var account_id.product}
     parallel_regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
@@ -252,12 +252,12 @@ deployments:
           namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
           stack: cost-optimizers 
           deployment_bucket: ${cfn ${var customer}-${env DEPLOY_ENVIRONMENT}-serverless-state.oStateS3Bucket}
-          account_id_network: 485355486848
-          account_id_commons: 187739744457 
-          account_id_sandbox: 535005587294 
-          account_id_develop: 648027066783
-          account_id_staging: 875358465253
-          account_id_product: 727515289814
+          account_id_network: ${var account_id.network}
+          account_id_commons: ${var account_id.commons}
+          account_id_sandbox: ${var account_id.sandbox} 
+          account_id_develop: ${var account_id.develop}
+          account_id_staging: ${var account_id.staging}
+          account_id_product: ${var account_id.product}
         options:
           skip_npm_ci: false
     environments:
