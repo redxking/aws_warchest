@@ -205,12 +205,7 @@ deployments:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       environment: ${env DEPLOY_ENVIRONMENT}
       region: ${env AWS_REGION}
-      account_id_network: ${var account_id.network}
-      account_id_commons: ${var account_id.commons}
-      account_id_sandbox: ${var account_id.sandbox} 
-      account_id_develop: ${var account_id.develop}
-      account_id_staging: ${var account_id.staging}
-      account_id_product: ${var account_id.product}
+      account_ids: ${var account_id}
     parallel_regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}

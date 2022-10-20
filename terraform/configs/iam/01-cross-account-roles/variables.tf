@@ -29,29 +29,9 @@ variable "create_cross_account_automation_exec_role" {
     type        = bool
 }
 
-variable "account_id_commons" {
-    description = "AWS Account Id: Commons"
-    type        = string
-}
-
-variable "account_id_sandbox" {
-    description = "AWS Account Id: Sandbox"
-    type        = string
-}
-
-variable "account_id_develop" {
-    description = "AWS Account Id: Develop"
-    type        = string
-}
-
-variable "account_id_staging" {
-    description = "AWS Account Id: Staging"
-    type        = string
-}
-
-variable "account_id_product" {
-    description = "AWS Account Id: Product"
-    type        = string
+variable "account_ids" {
+    description = "AWS Account Ids"
+    type        = map(string)
 }
 
 #
