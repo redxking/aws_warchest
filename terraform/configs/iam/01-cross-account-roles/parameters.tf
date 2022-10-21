@@ -65,7 +65,7 @@ resource "aws_ssm_parameter" "cross_acct_automation_lambda_role_unique_id" {
 # SSM Parameter: Cross Account Automation Execution Role
 ################################################################################
 resource "aws_ssm_parameter" "cross_acct_automation_exec_role_arn" {
-  count = local.creatcross_acct_automation_lambdae_related_cross_account_automation_exec_role_resources ? 1 : 0
+  count = local.create_related_cross_account_automation_exec_role_resources ? 1 : 0
   
   description = "The Arn of the Cross Account Automation Execution IAM Role"
   name        = "/infra/${var.environment}/iam/cross_acct_automation_exec_role_arn"
@@ -80,7 +80,7 @@ resource "aws_ssm_parameter" "cross_acct_automation_exec_role_arn" {
 }
 
 resource "aws_ssm_parameter" "cross_acct_automation_exec_role_id" {
-  count = local.creatcross_acct_automation_lambdae_related_cross_account_automation_exec_role_resources ? 1 : 0
+  count = local.create_related_cross_account_automation_exec_role_resources ? 1 : 0
   
   description = "The Id of the Cross Account Automation Execution IAM Role"
   name        = "/infra/${var.environment}/iam/cross_acct_automation_exec_role_id"
@@ -95,7 +95,7 @@ resource "aws_ssm_parameter" "cross_acct_automation_exec_role_id" {
 }
 
 resource "aws_ssm_parameter" "cross_acct_automation_exec_role_name" {
-  count = local.creatcross_acct_automation_lambdae_related_cross_account_automation_exec_role_resources ? 1 : 0
+  count = local.create_related_cross_account_automation_exec_role_resources ? 1 : 0
   
   description = "The Name of the Cross Account Automation Execution IAM Role"
   name        = "/infra/${var.environment}/iam/cross_acct_automation_exec_role_name"
@@ -110,7 +110,7 @@ resource "aws_ssm_parameter" "cross_acct_automation_exec_role_name" {
 }
 
 resource "aws_ssm_parameter" "cross_acct_automation_exec_role_unique_id" {
-  count = local.creatcross_acct_automation_lambdae_related_cross_account_automation_exec_role_resources ? 1 : 0
+  count = local.create_related_cross_account_automation_exec_role_resources ? 1 : 0
   
   description = "The Unique Id of the Cross Account Automation Execution IAM Role"
   name        = "/infra/${var.environment}/iam/cross_acct_automation_exec_role_unique_id"
