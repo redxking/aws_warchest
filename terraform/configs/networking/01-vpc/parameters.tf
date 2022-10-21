@@ -742,9 +742,9 @@ resource "aws_ssm_parameter" "elasticache_route_table_association_ids" {
   depends_on  = [module.vpc]
 }
 
-####################V############################################################
+################################################################################
 # SSM Parameters: Subnet (Intra) 
-#####################V###########################################################
+################################################################################
 resource "aws_ssm_parameter" "intra_subnet_ids" {
   count       = local.create_related_intra_subnet_resources ? 1 : 0
 
@@ -835,9 +835,9 @@ resource "aws_ssm_parameter" "intra_route_table_association_ids" {
   depends_on  = [module.vpc]
 }
 
-####################V############################################################
+################################################################################
 # SSM Parameters: Additional Attributes 
-#####################V###########################################################
+################################################################################
 resource "aws_ssm_parameter" "dhcp_options_id" {
   count       = length(module.vpc.dhcp_options_id) > 0 ? 1 : 0
 
