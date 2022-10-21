@@ -21,6 +21,15 @@ runway-deploy-staging:
 runway-deploy-product:
 	@CI=1 DEPLOY_ENVIRONMENT=product runway deploy
 
+runway-deploy-all:
+	@$(MAKE) runway-deploy-master
+	@$(MAKE) runway-deploy-network
+	@$(MAKE) runway-deploy-commons
+	@$(MAKE) runway-deploy-sandbox
+	@$(MAKE) runway-deploy-develop
+	@$(MAKE) runway-deploy-staging
+	@$(MAKE) runway-deploy-product
+
 
 #
 # CAUTION: DESTRUCTIVE FUNCTIONS!
