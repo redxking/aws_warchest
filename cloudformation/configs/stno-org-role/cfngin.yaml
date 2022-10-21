@@ -9,7 +9,8 @@ common_tags: &common_tags
 stacks:
   stno-organization-role:
     template_path: templates/aws-transit-network-orchestrator-organization-role.yaml
-    termination_protection: true
+    enabled: ${enable_stack_changes}
+    termination_protection: ${enable_stack_termination_protection}
     variables:
       HubAccount: ${HubAccount}
       RoleName: ${RoleName}

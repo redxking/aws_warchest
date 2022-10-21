@@ -9,7 +9,8 @@ common_tags: &common_tags
 stacks:
   stno-spoke:
     template_path: templates/aws-transit-network-orchestrator-spoke.yaml
-    termination_protection: true
+    enabled: ${enable_stack_changes}
+    termination_protection: ${enable_stack_termination_protection}
     variables:
       HubAccount: ${HubAccount}
       CreateServiceRoleForVPCTransitGateway: ${CreateServiceRoleForVPCTransitGateway}

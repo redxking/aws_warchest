@@ -23,6 +23,8 @@ deployments:
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+      enable_stack_changes: false
+      enable_stack_termination_protection: true
     parallel_regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
@@ -50,6 +52,8 @@ deployments:
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+      enable_stack_changes: false
+      enable_stack_termination_protection: true
     parallel_regions:
       - us-east-1
     account_id: ${var account_id.${env DEPLOY_ENVIRONMENT}}
@@ -77,6 +81,8 @@ deployments:
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+      enable_stack_changes: true 
+      enable_stack_termination_protection: false 
       HubAccount: ${var account_id.network}
       RoleName: ${var customer}-master-stno-OrganizationInformationRole 
     parallel_regions:
@@ -103,6 +109,8 @@ deployments:
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+      enable_stack_changes: true 
+      enable_stack_termination_protection: false
       OrganizationManagementAccountRoleArn: 'arn:aws:iam::${var account_id.master}:role/${var customer}-master-stno-OrganizationInformationRole'
     parallel_regions:
       - us-east-1
@@ -128,6 +136,8 @@ deployments:
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
+      enable_stack_changes: true 
+      enable_stack_termination_protection: false
       HubAccount: ${var account_id.network}
     parallel_regions:
       - us-east-1

@@ -9,7 +9,8 @@ common_tags: &common_tags
 stacks:
   stno-hub:
     template_path: templates/aws-transit-network-orchestrator-hub.yaml
-    termination_protection: true
+    enabled: ${enable_stack_changes}
+    termination_protection: ${enable_stack_termination_protection}
     variables: 
       Principals: ${Principals} 
       PrincipalType: ${PrincipalType}
