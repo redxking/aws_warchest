@@ -4,13 +4,16 @@ Collection of Terraform, Cloudformation and Serverless Framework Resources and M
 
 ## ToDo:
     - Automate TGW Peering via Resource Tagging and STNO.
+    - Route traffic thru Network Account only via TGW?
+    - Conditionally create NAT Gateways or NexGen FW devices in Network VPC?
+    - 
 
 
 ### Account(s)
 | Account Name | Account Id   | Description                              |
 | :----------- | :----------- | :--------------------------------------- |
 | master       | 922481319116 | Root and Organization Management Account |
-| sandbox      | 535005587294 | Sandbox Environment Account              | 
+| sandbox      | 535005587294 | Sandbox Environment Account              |
 | develop      | 648027066783 | Develop Environment Account              |
 | staging      | 875358465253 | Staging Environment Account              |
 | product      | 727515289814 | Product Environment Account              |
