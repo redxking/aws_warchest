@@ -311,21 +311,6 @@ resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
-  count       = local.create_related_private_subnet_resources && local.create_related_nat_gateway_resources ? 1 : 0
-
-  description = "List of IDs of the private nat gateway route"
-  name        = "/infra/${var.environment}/networking/private_nat_gateway_route_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.private_nat_gateway_route_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
 resource "aws_ssm_parameter" "private_route_table_association_ids" {
   count       = local.create_related_private_subnet_resources ? 1 : 0
 
