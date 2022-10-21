@@ -1,5 +1,11 @@
 ---
 
+network:
+  timeout: 10
+  memorySize: 128
+
+  DUMMY_MSG: "Hello World: Network"
+
 commons:
   timeout: 10
   memorySize: 128
