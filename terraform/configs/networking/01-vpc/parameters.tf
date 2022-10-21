@@ -1,3 +1,35 @@
+################################################################################
+# SSM Parameters: Static values (arguments)
+################################################################################
+resource "aws_ssm_parameter" "azs" {
+  description = "A list of availability zones specified as argument to this module"
+  name        = "/infra/${var.environment}/networking/vpc_availability_zones"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.azs))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "name" {
+  description = "The name of the VPC specified as argument to this module"
+  name        = "/infra/${var.environment}/networking/vpc_name"
+  type        = "String"
+  value       = module.vpc.name
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+################################################################################
+# SSM Parameters: VPC 
+################################################################################
 resource "aws_ssm_parameter" "vpc_id" {
   description = "The ID of the VPC"
   name        = "/infra/${var.environment}/networking/vpc_id"
@@ -186,6 +218,9 @@ resource "aws_ssm_parameter" "vpc_owner_id" {
   depends_on  = [module.vpc]
 }
 
+################################################################################
+# SSM Parameters: Subnet (Private) 
+################################################################################
 resource "aws_ssm_parameter" "private_subnet_ids" {
   count       = local.create_related_private_subnet_resources ? 1 : 0
 
@@ -246,6 +281,69 @@ resource "aws_ssm_parameter" "private_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
+resource "aws_ssm_parameter" "private_route_table_ids" {
+  count       = local.create_related_private_subnet_resources ? 1 : 0
+
+  description = "List of IDs of private route tables"
+  name        = "/infra/${var.environment}/networking/private_route_table_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.private_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
+  count       = local.create_related_private_subnet_resources && local.create_related_nat_gateway_resources ? 1 : 0
+
+  description = "List of IDs of the private nat gateway route"
+  name        = "/infra/${var.environment}/networking/private_nat_gateway_route_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.private_nat_gateway_route_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
+  count       = local.create_related_private_subnet_resources && local.create_related_nat_gateway_resources ? 1 : 0
+
+  description = "List of IDs of the private nat gateway route"
+  name        = "/infra/${var.environment}/networking/private_nat_gateway_route_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.private_nat_gateway_route_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "private_route_table_association_ids" {
+  count       = local.create_related_private_subnet_resources ? 1 : 0
+
+  description = "List of IDs of the private route table association"
+  name        = "/infra/${var.environment}/networking/private_route_table_association_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.private_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+################################################################################
+# SSM Parameters: Subnet (Public) 
+################################################################################
 resource "aws_ssm_parameter" "public_subnet_ids" {
   count       = local.create_related_public_subnet_resources ? 1 : 0
 
@@ -306,6 +404,54 @@ resource "aws_ssm_parameter" "public_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
+resource "aws_ssm_parameter" "public_route_table_ids" {
+  count       = local.create_related_public_subnet_resources ? 1 : 0
+
+  description = "List of IDs of public route tables"
+  name        = "/infra/${var.environment}/networking/public_route_table_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.public_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "public_internet_gateway_route_id" {
+  count       = local.create_related_internet_gateway_resources ? 1 : 0
+
+  description = "ID of the internet gateway route"
+  name        = "/infra/${var.environment}/networking/public_internet_gateway_route_id"
+  type        = "String"
+  value       = module.vpc.public_internet_gateway_route_id
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "public_route_table_association_ids" {
+  count       = length(module.vpc.public_route_table_association_ids) > 0 ? 1 : 0
+
+  description = "List of IDs of the public route table association"
+  name        = "/infra/${var.environment}/networking/public_route_table_association_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.public_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+################################################################################
+# SSM Parameters: Subnet (Database) 
+################################################################################
 resource "aws_ssm_parameter" "database_subnet_ids" {
   count       = local.create_related_database_subnet_resources ? 1 : 0
 
@@ -365,7 +511,39 @@ resource "aws_ssm_parameter" "database_subnets_ipv6_cidr_blocks" {
   # Dependency(s)
   depends_on  = [module.vpc]
 }
+resource "aws_ssm_parameter" "database_route_table_ids" {
+  count       = local.create_related_database_subnet_resources ? 1 : 0
 
+  description = "List of IDs of database route tables"
+  name        = "/infra/${var.environment}/networking/database_route_table_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.database_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "database_route_table_association_ids" {
+  count       = local.create_related_database_subnet_resources ? 1 : 0
+
+  description = "List of IDs of the database route table association"
+  name        = "/infra/${var.environment}/networking/database_route_table_association_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.database_route_table_association_ids))
+  
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+################################################################################
+# SSM Parameters: Subnet (Redshift) 
+################################################################################
 resource "aws_ssm_parameter" "redshift_subnet_ids" {
   count       = local.create_related_redshift_subnet_resources ? 1 : 0
 
@@ -426,6 +604,54 @@ resource "aws_ssm_parameter" "redshift_subnet_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
+resource "aws_ssm_parameter" "redshift_route_table_ids" {
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
+
+  description = "List of IDs of redshift route tables"
+  name        = "/infra/${var.environment}/networking/redshift_route_table_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.redshift_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "redshift_route_table_association_ids" {
+  count       = local.create_related_redshift_subnet_resources ? 1 : 0
+
+  description = "List of IDs of the redshift route table association"
+  name        = "/infra/${var.environment}/networking/redshift_route_table_association_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.redshift_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "redshift_public_route_table_association_ids" {
+  count       = length(module.vpc.redshift_public_route_table_association_ids) > 0 ? 1 : 0
+
+  description = "List of IDs of the public redshidt route table association"
+  name        = "/infra/${var.environment}/networking/redshift_public_route_table_association_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.redshift_public_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+################################################################################
+# SSM Parameters: Subnet (Elasticache) 
+################################################################################
 resource "aws_ssm_parameter" "elasticache_subnet_ids" {
   count       = local.create_related_elasticache_subnet_resources ? 1 : 0
 
@@ -486,6 +712,39 @@ resource "aws_ssm_parameter" "elasticache_subnet_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
+resource "aws_ssm_parameter" "elasticache_route_table_ids" {
+  count       = local.create_related_elasticache_subnet_resources ? 1 : 0
+
+  description = "List of IDs of elasticache route tables"
+  name        = "/infra/${var.environment}/networking/elasticache_route_table_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.elasticache_route_table_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+resource "aws_ssm_parameter" "elasticache_route_table_association_ids" {
+  count       = length(module.vpc.elasticache_route_table_association_ids) > 0 ? 1 : 0
+
+  description = "List of IDs of the elasticache route table association"
+  name        = "/infra/${var.environment}/networking/elasticache_route_table_association_ids"
+  type        = "StringList"
+  value       = join(",", tolist(module.vpc.elasticache_route_table_association_ids))
+
+  # Tag(s)
+  tags        = local.tags 
+
+  # Dependency(s)
+  depends_on  = [module.vpc]
+}
+
+####################V############################################################
+# SSM Parameters: Subnet (Intra) 
+#####################V###########################################################
 resource "aws_ssm_parameter" "intra_subnet_ids" {
   count       = local.create_related_intra_subnet_resources ? 1 : 0
 
@@ -546,81 +805,6 @@ resource "aws_ssm_parameter" "intra_subnets_ipv6_cidr_blocks" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "public_route_table_ids" {
-  count       = local.create_related_public_subnet_resources ? 1 : 0
-
-  description = "List of IDs of public route tables"
-  name        = "/infra/${var.environment}/networking/public_route_table_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.public_route_table_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "private_route_table_ids" {
-  count       = local.create_related_private_subnet_resources ? 1 : 0
-
-  description = "List of IDs of private route tables"
-  name        = "/infra/${var.environment}/networking/private_route_table_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.private_route_table_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "database_route_table_ids" {
-  count       = local.create_related_database_subnet_resources ? 1 : 0
-
-  description = "List of IDs of database route tables"
-  name        = "/infra/${var.environment}/networking/database_route_table_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.database_route_table_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "redshift_route_table_ids" {
-  count       = local.create_related_redshift_subnet_resources ? 1 : 0
-
-  description = "List of IDs of redshift route tables"
-  name        = "/infra/${var.environment}/networking/redshift_route_table_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.redshift_route_table_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "elasticache_route_table_ids" {
-  count       = local.create_related_elasticache_subnet_resources ? 1 : 0
-
-  description = "List of IDs of elasticache route tables"
-  name        = "/infra/${var.environment}/networking/elasticache_route_table_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.elasticache_route_table_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
 resource "aws_ssm_parameter" "intra_route_table_ids" {
   count       = local.create_related_intra_subnet_resources ? 1 : 0
 
@@ -628,111 +812,6 @@ resource "aws_ssm_parameter" "intra_route_table_ids" {
   name        = "/infra/${var.environment}/networking/intra_route_table_ids"
   type        = "StringList"
   value       = join(",", tolist(module.vpc.intra_route_table_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "public_internet_gateway_route_id" {
-  count       = local.create_related_internet_gateway_resources ? 1 : 0
-
-  description = "ID of the internet gateway route"
-  name        = "/infra/${var.environment}/networking/public_internet_gateway_route_id"
-  type        = "String"
-  value       = module.vpc.public_internet_gateway_route_id
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "private_nat_gateway_route_ids" {
-  count       = local.create_related_private_subnet_resources && local.create_related_nat_gateway_resources ? 1 : 0
-
-  description = "List of IDs of the private nat gateway route"
-  name        = "/infra/${var.environment}/networking/private_nat_gateway_route_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.private_nat_gateway_route_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "private_route_table_association_ids" {
-  count       = local.create_related_private_subnet_resources ? 1 : 0
-
-  description = "List of IDs of the private route table association"
-  name        = "/infra/${var.environment}/networking/private_route_table_association_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.private_route_table_association_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "database_route_table_association_ids" {
-  count       = local.create_related_database_subnet_resources ? 1 : 0
-
-  description = "List of IDs of the database route table association"
-  name        = "/infra/${var.environment}/networking/database_route_table_association_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.database_route_table_association_ids))
-  
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "redshift_route_table_association_ids" {
-  count       = local.create_related_redshift_subnet_resources ? 1 : 0
-
-  description = "List of IDs of the redshift route table association"
-  name        = "/infra/${var.environment}/networking/redshift_route_table_association_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.redshift_route_table_association_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "redshift_public_route_table_association_ids" {
-  count       = length(module.vpc.redshift_public_route_table_association_ids) > 0 ? 1 : 0
-
-  description = "List of IDs of the public redshidt route table association"
-  name        = "/infra/${var.environment}/networking/redshift_public_route_table_association_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.redshift_public_route_table_association_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "elasticache_route_table_association_ids" {
-  count       = length(module.vpc.elasticache_route_table_association_ids) > 0 ? 1 : 0
-
-  description = "List of IDs of the elasticache route table association"
-  name        = "/infra/${var.environment}/networking/elasticache_route_table_association_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.elasticache_route_table_association_ids))
 
   # Tag(s)
   tags        = local.tags 
@@ -756,21 +835,9 @@ resource "aws_ssm_parameter" "intra_route_table_association_ids" {
   depends_on  = [module.vpc]
 }
 
-resource "aws_ssm_parameter" "public_route_table_association_ids" {
-  count       = length(module.vpc.public_route_table_association_ids) > 0 ? 1 : 0
-
-  description = "List of IDs of the public route table association"
-  name        = "/infra/${var.environment}/networking/public_route_table_association_ids"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.public_route_table_association_ids))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
+####################V############################################################
+# SSM Parameters: Additional Attributes 
+#####################V###########################################################
 resource "aws_ssm_parameter" "dhcp_options_id" {
   count       = length(module.vpc.dhcp_options_id) > 0 ? 1 : 0
 
@@ -989,33 +1056,6 @@ resource "aws_ssm_parameter" "vpc_flow_log_cloudwatch_iam_role_arn" {
   name        = "/infra/${var.environment}/networking/vpc_flow_log_cloudwatch_iam_role_arn"
   type        = "String"
   value       = module.vpc.vpc_flow_log_cloudwatch_iam_role_arn
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-# Static values (arguments)
-resource "aws_ssm_parameter" "azs" {
-  description = "A list of availability zones specified as argument to this module"
-  name        = "/infra/${var.environment}/networking/vpc_availability_zones"
-  type        = "StringList"
-  value       = join(",", tolist(module.vpc.azs))
-
-  # Tag(s)
-  tags        = local.tags 
-
-  # Dependency(s)
-  depends_on  = [module.vpc]
-}
-
-resource "aws_ssm_parameter" "name" {
-  description = "The name of the VPC specified as argument to this module"
-  name        = "/infra/${var.environment}/networking/vpc_name"
-  type        = "String"
-  value       = module.vpc.name
 
   # Tag(s)
   tags        = local.tags 
