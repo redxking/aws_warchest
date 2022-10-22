@@ -1,10 +1,21 @@
 #
 # Data: SSM Parameters - VPC
 #
-data "aws_ssm_parameter" "vpc_id" {
-  name   = "/infra/${var.environment}/networking/vpc_id"
+data "external" "vpc_id" {
+  program = ["python", "${path.module}/../../../scripts/tf_data_external_ssm_parameter.py"]
+
+  query = {
+    aws_region         = var.region
+    ssm_parameter_name = "/infra/${var.environment}/networking/vpc_id"
+  }
 }
 
-data "aws_ssm_parameter" "vpc_cidr_block" {
-  name   = "/infra/${var.environment}/networking/vpc_cidr_block"
+data "external" "vpc_cidr_block" {
+  program = ["python", "${path.module}/../../../scripts/tf_data_external_ssm_parameter.py"]
+
+  query = {
+    aws_region         = var.region
+    ssm_parameter_name = "/infra/${var.environment}/networking/vpc_cidr_block"
+    default_value      = "172.31.0.0/16"
+  }
 }

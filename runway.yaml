@@ -11,15 +11,15 @@ deployments:
       - path: cloudformation/configs/backend_terraform
         type: cloudformation
     environments:
-      master:  true
-      audit:   true
-      archive: true
-      network: true
-      commons: true
-      sandbox: true
-      develop: true
-      staging: true
-      product: true
+      master:  false
+      audit:   false
+      archive: false
+      network: false
+      commons: false
+      sandbox: false
+      develop: false
+      staging: false
+      product: false
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}
@@ -40,15 +40,15 @@ deployments:
       - path: cloudformation/configs/backend_serverless
         type: cloudformation
     environments:
-      master:  true
-      audit:   true
-      archive: true
-      network: true
-      commons: true
-      sandbox: true
-      develop: true
-      staging: true
-      product: true
+      master:  false
+      audit:   false
+      archive: false
+      network: false
+      commons: false
+      sandbox: false
+      develop: false
+      staging: false
+      product: false
     parameters:
       namespace: ${var customer}-${env DEPLOY_ENVIRONMENT}
       cfngin_bucket: cfngin-${var customer}-${env DEPLOY_ENVIRONMENT}-${env AWS_REGION}

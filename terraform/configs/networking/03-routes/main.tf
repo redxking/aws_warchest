@@ -1,7 +1,7 @@
 locals {
   all_route_table_ids = [
-    split(",", data.aws_ssm_parameter.intra_route_table_ids.value),
-    split(",", data.aws_ssm_parameter.private_route_table_ids.value)
+    split(",", data.external.intra_route_table_ids.result["value"]),
+    split(",", data.external.private_route_table_ids.result["value"])
   ]
   tags = merge(
     { Namespace: var.namespace },
@@ -16,7 +16,7 @@ locals {
 # VPC Routes Module
 ################################################################################
 resource "aws_route" "transit_gateway_route_10xxx" {
-  for_each = nonsensitive(toset(flatten(local.all_route_table_ids)))
+  for_each = toset(flatten(local.all_route_table_ids))
 
   route_table_id            = each.value 
   destination_cidr_block    = "10.0.0.0/8"
@@ -24,7 +24,7 @@ resource "aws_route" "transit_gateway_route_10xxx" {
 }
 
 resource "aws_route" "transit_gateway_route_172xxx" {
-  for_each = nonsensitive(toset(flatten(local.all_route_table_ids)))
+  for_each = toset(flatten(local.all_route_table_ids))
 
   route_table_id            = each.value 
   destination_cidr_block    = "172.16.0.0/12"
@@ -32,7 +32,7 @@ resource "aws_route" "transit_gateway_route_172xxx" {
 }
 
 resource "aws_route" "transit_gateway_route_192xxx" {
-  for_each = nonsensitive(toset(flatten(local.all_route_table_ids)))
+  for_each = toset(flatten(local.all_route_table_ids))
 
   route_table_id            = each.value 
   destination_cidr_block    = "192.168.0.0/16"

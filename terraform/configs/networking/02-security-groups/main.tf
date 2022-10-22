@@ -17,7 +17,7 @@ module "transit_gateway_sg" {
 
   name        = "transit-gateway-sg"
   description = "Security group for AWS Transit Gateway" 
-  vpc_id      = data.aws_ssm_parameter.vpc_id.value 
+  vpc_id      = data.external.vpc_id.result["value"] 
   
   egress_with_cidr_blocks = [
     {
@@ -55,7 +55,7 @@ module "systems_manager_sg" {
 
   name        = "systems-manager-sg"
   description = "Security group for AWS Systems Manager" 
-  vpc_id      = data.aws_ssm_parameter.vpc_id.value 
+  vpc_id      = data.external.vpc_id.result["value"]
   
   ingress_with_cidr_blocks = [
     {
@@ -63,7 +63,7 @@ module "systems_manager_sg" {
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
-      cidr_blocks = data.aws_ssm_parameter.vpc_cidr_block.value
+      cidr_blocks = data.external.vpc_cidr_block.result["value"]
     }
   ] 
   
@@ -77,7 +77,7 @@ module "route53_resolver_sg" {
 
   name        = "route53-resolver-sg"
   description = "Security group for AWS Route53 Resolver" 
-  vpc_id      = data.aws_ssm_parameter.vpc_id.value 
+  vpc_id      = data.external.vpc_id.result["value"]
   
   egress_with_cidr_blocks = [
     {
